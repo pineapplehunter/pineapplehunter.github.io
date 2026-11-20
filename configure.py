@@ -9,9 +9,10 @@ import shutil
 import sys
 from pathlib import Path
 
+import yaml
 from ninja import ninja_syntax
 
-from tools.images import configure_images
+from tools.images import IMAGE_DIR, configure_images
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--base-path", default="/", help="URL path where the site is hosted (default: /)")
@@ -44,6 +45,11 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     ninja.rule("inline", "$python tools/style.py inline $in $out", "Inline CSS $out")
 
     images, outputs = configure_images(ninja, dist)
+    profile = yaml.safe_load(Path("content/profile.yaml").read_text(encoding="utf-8"))
+    favicon = str(dist / "favicon.png")
+    ninja.rule("favicon", "$python tools/images.py favicon $in $out", "Favicon $out")
+    ninja.build(favicon, "favicon", str(IMAGE_DIR / profile["avatar"]), implicit="tools/images.py")
+    outputs.append(favicon)
     manifest = work / "images.json"
     data = json.dumps(images, indent=2) + "\n"
     if not manifest.exists() or manifest.read_text(encoding="utf-8") != data:

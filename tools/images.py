@@ -38,6 +38,14 @@ def configure_images(ninja, dist):
 
 
 if __name__ == "__main__":
+    if sys.argv[1] == "favicon":
+        _, _, source, output = sys.argv
+        with Image.open(source) as image:
+            icon = ImageOps.pad(ImageOps.exif_transpose(image).convert("RGBA"), (48, 48),
+                                method=Image.Resampling.LANCZOS)
+            icon.save(output, "PNG", optimize=True)
+        sys.exit(0)
+
     _, cjxl, source, width, height, jxl, webp, png = sys.argv
     with Image.open(source) as image:
         image = ImageOps.exif_transpose(image)
