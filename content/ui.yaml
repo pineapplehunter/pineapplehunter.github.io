@@ -15,6 +15,7 @@ ja:
   projects: GitHub のプロジェクト
   elsewhere: その他のリンク
   back: 記事一覧に戻る
+  footnotes: 脚注
   empty: まだ記事はありません。
   not_found: ページが見つかりません
   not_found_description: ページが移動したか、URL が間違っている可能性があります。
@@ -35,6 +36,7 @@ en:
   projects: On GitHub
   elsewhere: Elsewhere
   back: Back to writing
+  footnotes: Footnotes
   empty: No posts yet.
   untranslated: Japanese only
   not_found: Page not found

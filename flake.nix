@@ -32,6 +32,7 @@
                 ps: with ps; [
                   jinja2
                   markdown-it-py
+                  mdit-py-plugins
                   ninja
                   pillow
                   pyyaml

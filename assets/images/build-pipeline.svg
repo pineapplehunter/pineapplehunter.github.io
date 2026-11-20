@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="476" viewBox="0 0 560 476" xml:lang="ja">
+  <title>静的サイトのビルドグラフ</title>
+  <style>
+    svg {
+      --card: #fcfbff; --group: #efecf8; --output: #e6e0ff; --ink: #221e38;
+      --muted: #554e6b; --border: #a59abb; --line: #635586; --tool: #302866; --tool-ink: #fff;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --card: #31294a; --group: #251f38; --output: #433563; --ink: #f2eef9;
+        --muted: #c7bedc; --border: #8476a4; --line: #b7a9db; --tool: #d6c9ff; --tool-ink: #221e38;
+      }
+    }
+    text { font: 600 22px system-ui, "Noto Sans CJK JP", sans-serif; text-anchor: middle; fill: var(--ink); }
+    .code { font: 600 21px ui-monospace, monospace; }
+    .detail { font: 18px system-ui, "Noto Sans CJK JP", sans-serif; fill: var(--muted); }
+    .path { font: 18px ui-monospace, monospace; fill: var(--muted); }
+    .group { fill: var(--group); stroke: var(--border); stroke-dasharray: 5 4; }
+    .card, .output { fill: var(--card); stroke: var(--border); stroke-width: 1.5; }
+    .output { fill: var(--output); }
+    .tool { fill: var(--tool); }
+    .tool-label { fill: var(--tool-ink); }
+    .edge, .join { fill: none; stroke: var(--line); stroke-width: 2; }
+    .edge { marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 9 8" refX="8.5" refY="4" markerWidth="9" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0l9 4-9 4z" fill="var(--line)"/>
+    </marker>
+  </defs>
+
+  <rect class="group" x="8" y="124" width="544" height="344" rx="8"/>
+  <path class="join" d="M104 382v19h352v-19"/>
+  <g class="edge">
+    <path d="M164 41h22"/>
+    <path d="M374 41h22"/>
+    <path d="M470 64v24H280v18"/>
+    <path d="M104 224v23"/>
+    <path d="M280 224v23"/>
+    <path d="M456 224v23"/>
+    <path d="M104 293v23"/>
+    <path d="M280 293v23"/>
+    <path d="M456 293v23"/>
+    <path d="M280 382v34"/>
+  </g>
+
+  <g>
+    <rect class="card" x="16" y="18" width="148" height="46" rx="4"/>
+    <rect class="card" x="186" y="18" width="188" height="46" rx="4"/>
+    <rect class="card" x="396" y="18" width="148" height="46" rx="4"/>
+    <text class="code" x="90" y="48">build.sh</text>
+    <text class="code" x="280" y="48">configure.py</text>
+    <text class="code" x="470" y="48">build.ninja</text>
+  </g>
+
+  <rect class="tool" x="198" y="106" width="164" height="36" rx="4"/>
+  <text class="tool-label" x="280" y="132">Ninja が実行</text>
+
+  <g>
+    <rect class="card" x="24" y="158" width="160" height="66" rx="4"/>
+    <text x="104" y="184">Markdown</text>
+    <text class="detail" x="104" y="209">Jinja ＋ YAML</text>
+    <rect class="tool" x="24" y="247" width="160" height="46" rx="4"/>
+    <text class="tool-label" x="104" y="278">Python</text>
+    <rect class="output" x="24" y="316" width="160" height="66" rx="4"/>
+    <text x="104" y="343">HTML</text>
+    <text class="path" x="104" y="367">…/index.html</text>
+  </g>
+  <g>
+    <rect class="card" x="200" y="158" width="160" height="66" rx="4"/>
+    <text class="code" x="280" y="184">site.css</text>
+    <text class="detail" x="280" y="209">テンプレート</text>
+    <rect class="tool" x="200" y="247" width="160" height="46" rx="4"/>
+    <text class="tool-label" x="280" y="278">Tailwind</text>
+    <rect class="output" x="200" y="316" width="160" height="66" rx="4"/>
+    <text x="280" y="343">共通 CSS</text>
+    <text class="path" x="280" y="367">site.css</text>
+  </g>
+  <g>
+    <rect class="card" x="376" y="158" width="160" height="66" rx="4"/>
+    <text x="456" y="184">元画像</text>
+    <text class="path" x="456" y="209">assets/images</text>
+    <rect class="tool" x="376" y="247" width="160" height="46" rx="4"/>
+    <text class="tool-label" x="456" y="278">Pillow / cjxl</text>
+    <rect class="output" x="376" y="316" width="160" height="66" rx="4"/>
+    <text x="456" y="343">配信用画像</text>
+    <text class="detail" x="456" y="367">JXL / WebP / PNG</text>
+  </g>
+  <rect class="output" x="200" y="416" width="160" height="36" rx="4"/>
+  <text class="code" x="280" y="441">dist/</text>
+</svg>

@@ -30,6 +30,19 @@ The Japanese post is published at `/blog/first-post/`. Add an optional `content/
 
 The Japanese index is at `/` and the English index at `/en/`. Edit `content/about.ja.md` and `content/about.en.md` for the bios, `content/profile.yaml` for shared profile links, localized details, and the public site origin used in `hreflang` links, and `content/ui.yaml` for interface labels. The starter information and avatar come from [pineapplehunter's public GitHub profile](https://github.com/pineapplehunter).
 
+### Footnotes
+
+Use a label such as `[^source]` in the text and define it with `[^source]:`:
+
+```markdown
+See the page weight report[^page-weight] and the build notes[^build].
+
+[^build]: Additional details, with *Markdown* formatting.
+[^page-weight]: [HTTP Archive: Page Weight](https://httparchive.org/reports/page-weight)
+```
+
+Labels are case-sensitive and contain no spaces. Notes are numbered in order of first use, not definition order. Reusing a label links to the same note. The notes appear at the end of the article with links back to their references. An undefined label warns in live-reload mode (and remains visible as `[^label]`), but fails a normal build.
+
 ## Images and build steps
 
 Put a JPG, PNG, or WebP under `assets/images/`, then reference it as a Markdown image:
@@ -38,7 +51,9 @@ Put a JPG, PNG, or WebP under `assets/images/`, then reference it as a Markdown 
 ![Description of the photo](media/bench.jpg)
 ```
 
-The build generates JPEG XL, WebP, and PNG variants up to 240, 480, and 960 pixels wide, without upscaling. A native `<picture>` lets the browser choose the first format it supports in that order and pick a responsive size. Nested folders work; use the same relative path after `media/`. Each format and size has its own Ninja output. After configuring, run `ninja -f .build/build.ninja images-jxl`, `images-webp`, or `images-png` to build one format. JPEG XL reuses the resized PNG as its input.
+For a figure with a visible caption, put the image in its own paragraph and add a Markdown image title: `![Alt text](media/diagram.svg "Caption")`.
+
+The build generates JPEG XL, WebP, and PNG variants up to 240, 480, and 960 pixels wide, without upscaling. A native `<picture>` lets the browser choose the first format it supports in that order and pick a responsive size. Nested folders work; use the same relative path after `media/`. Each format and size has its own Ninja output. After configuring, run `ninja -f .build/build.ninja images-jxl`, `images-webp`, or `images-png` to build one format. JPEG XL reuses the resized PNG as its input. SVG diagrams with integer `width` and `height` attributes can go in the same directory. Reference them as `media/name.svg`; Ninja copies them without rasterizing.
 
 `./build.sh` runs `configure.py`, which uses `ninja.ninja_syntax` to emit `.build/build.ninja`. The script forwards all arguments to `configure.py`. For a project site, run `./build.sh --base-path /my-repo`; the default is `/`. To use Ninja options, run Ninja directly after configuring.
 

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="108" viewBox="0 0 560 108" xml:lang="ja">
+  <title>GitHub Pages への公開</title>
+  <style>
+    svg { --card: #fcfbff; --output: #e6e0ff; --ink: #221e38; --muted: #554e6b; --border: #a59abb; --line: #635586; }
+    @media (prefers-color-scheme: dark) {
+      svg { --card: #31294a; --output: #433563; --ink: #f2eef9; --muted: #c7bedc; --border: #8476a4; --line: #b7a9db; }
+    }
+    text { font: 600 22px system-ui, "Noto Sans CJK JP", sans-serif; text-anchor: middle; fill: var(--ink); }
+    .detail { font-size: 18px; font-weight: 400; fill: var(--muted); }
+    .code { font-family: ui-monospace, monospace; }
+    .card, .output { fill: var(--card); stroke: var(--border); stroke-width: 1.5; }
+    .output { fill: var(--output); }
+    .edge { fill: none; stroke: var(--line); stroke-width: 2; marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 9 8" refX="8.5" refY="4" markerWidth="9" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0l9 4-9 4z" fill="var(--line)"/>
+    </marker>
+  </defs>
+  <path class="edge" d="M188 54h38"/>
+  <path class="edge" d="M334 54h38"/>
+  <rect class="card" x="12" y="12" width="176" height="84" rx="4"/>
+  <rect class="output" x="226" y="12" width="108" height="84" rx="4"/>
+  <rect class="card" x="372" y="12" width="176" height="84" rx="4"/>
+  <text x="100" y="49">GitHub Actions</text>
+  <text class="detail" x="100" y="77">ビルド</text>
+  <text class="code" x="280" y="49">dist/</text>
+  <text class="detail" x="280" y="77">成果物</text>
+  <text x="460" y="49">GitHub Pages</text>
+  <text class="detail" x="460" y="77">公開</text>
+</svg>

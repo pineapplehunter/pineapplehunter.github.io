@@ -13,6 +13,7 @@ import yaml
 from ninja import ninja_syntax
 
 from tools.images import IMAGE_DIR, configure_images
+from tools.page_size import MARKERS
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--base-path", default="/", help="URL path where the site is hosted (default: /)")
@@ -74,6 +75,8 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     stylesheet = str(dist / "assets/site.css")
     ninja.build(stylesheet, "tailwind", "styles/site.css", implicit="template-inputs")
     outputs.append(stylesheet)
+    ninja.rule("page_size", "$python tools/page_size.py $in $out $site_root", "Measure $out")
+    ninja.build("page-size-inputs", "phony", [*outputs, "tools/page_size.py"])
 
     ninja.build("render-inputs", "phony",
                 ["template-inputs", "tools/render.py", "content/profile.yaml",
@@ -81,7 +84,13 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
 
     def page(filename, mode, lang, sources=(), alternate=""):
         html = str(dist / filename)
-        ninja.build(html, "render", list(map(str, sources)), implicit="render-inputs",
+        rendered = html
+        if mode == "post":
+            source = sources[0].read_bytes()
+            if any(marker in source for marker in MARKERS):
+                rendered = str(work / "unmeasured" / filename)
+                ninja.build(html, "page_size", rendered, implicit="page-size-inputs")
+        ninja.build(rendered, "render", list(map(str, sources)), implicit="render-inputs",
                     variables={"mode": mode, "lang": lang, "alternate": shlex.quote(alternate)})
         outputs.append(html)
 

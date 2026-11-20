@@ -25,10 +25,10 @@
 
 @utility entry-body {
   @apply max-w-[42rem] text-base leading-7 wrap-break-word sm:text-lg sm:leading-8;
-  & :where(h2, h3, h4) { @apply mt-9 mb-3 font-bold tracking-tight; }
+  & :where(h2, h3, h4) { @apply mt-9 mb-3 font-bold tracking-tight underline underline-offset-8; }
   & :where(h2) { @apply text-2xl; }
   & :where(h3, h4) { @apply text-xl; }
-  & :where(p, ul, ol, blockquote, pre, hr) { @apply my-4; }
+  & :where(p, ul, ol, blockquote, pre, hr, figure) { @apply my-4; }
   & :where(ul, ol) { @apply pl-6; }
   & :where(ul) { @apply list-disc; }
   & :where(ol) { @apply list-decimal; }
@@ -38,5 +38,7 @@
   & :where(pre code) { @apply bg-transparent p-0; }
   & :where(blockquote) { @apply border-s-4 border-rule ps-4 text-muted; }
   & :where(hr) { @apply border-rule; }
+  & .footnotes { @apply mt-10 border-t border-rule pt-4 text-sm leading-6 text-muted; }
+  & .footnotes > h2 { @apply mt-0 text-base; }
   & :where(img) { @apply h-auto max-w-full rounded-lg; }
 }
