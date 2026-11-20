@@ -25,6 +25,8 @@ jobs:
       - uses: cachix/install-nix-action@3dc140bfc76c49fbd4dd958429132e3746bcb086 # v31.11.5
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
         id: pages
+      - name: Download dev tools
+        run: nix develop -c true
       - name: Build static site
         env:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
