@@ -14,19 +14,21 @@ Open <http://localhost:8000>. `nix develop -c ./build.sh` also works without ent
 
 ## Write a post
 
-Add a Markdown file to `content/posts/` with a lowercase, hyphen-separated filename such as `first-post.md`:
+Write in Japanese first. Add `content/posts/first-post.ja.md` using a lowercase, hyphen-separated slug:
 
 ```markdown
 ---
-title: First post
+title: 最初の記事
 date: 2026-11-20
-summary: A short description for the writing index and page metadata.
+summary: 記事一覧とページの説明に使う短い概要。
 ---
 
-Start with a paragraph, then use level-two headings for sections.
+本文はここから。記事内の見出しにはレベル2から使います。
 ```
 
-The post URL is `blog/first-post/`. The home page lists all posts, newest first. Edit `content/about.md` for the bio and `content/profile.yaml` for the profile details, links, and projects on `about/`. The starter information and avatar come from [pineapplehunter's public GitHub profile](https://github.com/pineapplehunter).
+The Japanese post is published at `/blog/first-post/`. Add an optional `content/posts/first-post.en.md` with the same slug and English front matter and text to publish it at `/en/blog/first-post/`. The English index lists Japanese-only posts with a label and links to their originals until an English translation is added.
+
+The Japanese index is at `/` and the English index at `/en/`. Edit `content/about.ja.md` and `content/about.en.md` for the bios, `content/profile.yaml` for shared profile links, localized details, and the public site origin used in `hreflang` links, and `content/ui.yaml` for interface labels. The starter information and avatar come from [pineapplehunter's public GitHub profile](https://github.com/pineapplehunter).
 
 ## Images and build steps
 
@@ -43,11 +45,11 @@ The build generates JPEG XL, WebP, and PNG variants up to 240, 480, and 960 pixe
 Each page follows this chain:
 
 ```text
-Markdown + Jinja → intermediate HTML → minified Tailwind CSS → dist HTML with inline CSS
+Markdown + Jinja → intermediate HTML → per-page Tailwind CSS → dist HTML with inline CSS
 ```
 
 Tailwind scans only the intermediate HTML for that page. Edit its theme in `styles/site.css`. To add another preprocessor, follow `tools/images.py`: register a Ninja rule and its input/output edges in `configure.py`, then include the generated files in the `site` target. If rendering consumes a generated file, add it to the render edge's inputs.
 
 ## Publish to GitHub Pages
 
-In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. Push to `main` (or run the workflow manually). The workflow builds and uploads only `dist/`. Regular pages use relative links so they work at the domain root or under a repository path. GitHub Pages serves `dist/404.html` for missing URLs; the workflow passes GitHub Pages’ base path to `./build.sh --base-path` so its navigation works even from a nested URL. To preview its design with the local server, open `/404.html` directly. Tailwind v4 targets modern browsers; the underlying pages use standard HTML and native links.
+In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**. Push to `main` (or run the workflow manually). The workflow builds and uploads only `dist/`. Regular pages use relative links so they work at the domain root or under a repository path. GitHub Pages serves the Japanese `dist/404.html` for missing URLs, with a link to `/en/404.html`; the workflow passes GitHub Pages’ base path to `./build.sh --base-path` so its navigation works even from a nested URL. To preview its design with the local server, open `/404.html` directly. Tailwind v4 targets modern browsers; the underlying pages use standard HTML and native links.

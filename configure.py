@@ -23,10 +23,16 @@ work = Path(".build")
 dist = Path("dist")
 work.mkdir(exist_ok=True)
 
-posts = sorted(Path("content/posts").glob("*.md"))
-for post in posts:
-    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", post.stem):
-        raise SystemExit(f"{post}: use a lowercase, hyphen-separated filename")
+prefixes = {"ja": "", "en": "en/"}
+posts = {lang: {} for lang in prefixes}
+for post in sorted(Path("content/posts").glob("*.md")):
+    match = re.fullmatch(r"([a-z0-9]+(?:-[a-z0-9]+)*)\.(ja|en)\.md", post.name)
+    if not match:
+        raise SystemExit(f"{post}: use a filename like example-post.ja.md or example-post.en.md")
+    slug, lang = match.groups()
+    posts[lang][slug] = post
+for slug in posts["en"].keys() - posts["ja"].keys():
+    raise SystemExit(f"{posts['en'][slug]}: missing the Japanese source {slug}.ja.md")
 
 with (work / "build.ninja").open("w", encoding="utf-8") as file:
     ninja = ninja_syntax.Writer(file)
@@ -40,7 +46,9 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     if not cjxl:
         raise SystemExit("Install libjxl's cjxl or run nix develop -c ./build.sh")
     ninja.variable("cjxl", ninja_syntax.escape(shlex.quote(cjxl)))
-    ninja.rule("render", "$python tools/render.py $mode $out $args $in", "Render $out")
+    ninja.variable("site_root", ninja_syntax.escape(shlex.quote(site_root)))
+    ninja.rule("render", "$python tools/render.py $mode $out $lang $site_root $alternate $in",
+               "Render $out")
     ninja.rule("tailwind", "$python tools/style.py compile $in $out $tailwindcss", "Tailwind $out")
     ninja.rule("inline", "$python tools/style.py inline $in $out", "Inline CSS $out")
 
@@ -58,27 +66,34 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     render_deps = [
         "tools/render.py",
         "content/profile.yaml",
+        "content/ui.yaml",
         str(manifest),
         *map(str, sorted(Path("templates").glob("*.html"))),
     ]
 
-    def page(filename, mode, sources=(), args=""):
+    def page(filename, mode, lang, sources=(), alternate=""):
         html = work / "html" / filename
         css = work / "css" / Path(filename).with_suffix(".css")
         final = dist / filename
         ninja.build(str(html), "render", list(map(str, sources)), implicit=render_deps,
-                    variables={"mode": mode, "args": args})
+                    variables={"mode": mode, "lang": lang, "alternate": shlex.quote(alternate)})
         ninja.build(str(css), "tailwind", str(html),
                     implicit=["styles/site.css", "tools/style.py"])
         ninja.build(str(final), "inline", [str(html), str(css)], implicit="tools/style.py")
         outputs.append(str(final))
 
-    page("index.html", "blog", posts)
-    page("about/index.html", "about", ["content/about.md", *posts])
-    # A 404 can be served at any URL depth, so it needs site-rooted links.
-    page("404.html", "404", args=ninja_syntax.escape(shlex.quote(site_root)))
-    for post in posts:
-        page(f"blog/{post.stem}/index.html", "post", [post])
+    for lang, prefix in prefixes.items():
+        other = "en" if lang == "ja" else "ja"
+        other_prefix = prefixes[other]
+        listing = (posts["ja"] | posts[lang]).values()
+        page(prefix + "index.html", "blog", lang, listing, other_prefix + "index.html")
+        page(prefix + "about/index.html", "about", lang,
+             [f"content/about.{lang}.md", *listing], other_prefix + "about/index.html")
+        page(prefix + "404.html", "404", lang, alternate=other_prefix + "404.html")
+        for slug, post in posts[lang].items():
+            route = f"blog/{slug}/index.html"
+            alternate = other_prefix + route if slug in posts[other] else ""
+            page(prefix + route, "post", lang, [post], alternate)
     ninja.build("site", "phony", outputs)
     ninja.default("site")
 

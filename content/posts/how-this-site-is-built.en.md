@@ -4,7 +4,7 @@ date: 2026-11-20
 summary: From a Markdown file to a static page, with Ninja keeping track of the steps.
 ---
 
-This site starts as a directory of Markdown files. Each post has a title, date, and summary in YAML front matter; its filename becomes its URL.
+This site starts as a directory of Markdown files. Each post has a title, date, and summary in YAML front matter; its filename, without the language suffix, supplies the URL slug.
 
 ## What Ninja runs
 

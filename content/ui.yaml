@@ -1,0 +1,41 @@
+ja:
+  main_nav: メインナビゲーション
+  skip: 本文へスキップ
+  writing: 記事
+  writing_description: Shogo Takata のブログ記事。
+  about: プロフィール
+  dark_mode: ダークモード
+  other_language: English
+  other_index: English index
+  bio: 自己紹介
+  read_bio: 自己紹介を読む
+  avatar_alt: "GitHub のアバター：目を丸くしたタコのイラスト"
+  latest: 最近の記事
+  all_posts: 記事一覧
+  projects: GitHub のプロジェクト
+  elsewhere: その他のリンク
+  back: 記事一覧に戻る
+  empty: まだ記事はありません。
+  not_found: ページが見つかりません
+  not_found_description: ページが移動したか、URL が間違っている可能性があります。
+en:
+  main_nav: Main
+  skip: Skip to content
+  writing: Writing
+  writing_description: Posts by Shogo Takata.
+  about: About
+  dark_mode: Dark mode
+  other_language: 日本語
+  other_index: 日本語の記事一覧
+  bio: Bio
+  read_bio: Read bio
+  avatar_alt: "GitHub avatar: a black doodle of a wide-eyed octopus"
+  latest: Latest writing
+  all_posts: All posts
+  projects: On GitHub
+  elsewhere: Elsewhere
+  back: Back to writing
+  empty: No posts yet.
+  untranslated: Japanese only
+  not_found: Page not found
+  not_found_description: This page may have moved, or the address may be wrong.

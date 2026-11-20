@@ -1,31 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% include "_theme_head.html" %}
   <meta name="description" content="{{ description }}">
   <title>{{ title }} | {{ profile.name }}</title>
+  {% if section == "404" %}
+  <meta name="robots" content="noindex">
+  {% endif %}
+  {% for language, url in alternates.items() %}
+  <link rel="alternate" hreflang="{{ language }}" href="{{ url }}">
+  {% endfor %}
   <link rel="icon" type="image/png" sizes="48x48" href="{{ root }}favicon.png">
 </head>
 <body class="flex min-h-screen flex-col font-sans antialiased">
-  <a href="#main" class="sr-only z-10 rounded-md bg-paper px-3 py-2 focus-visible:not-sr-only focus-visible:absolute focus-visible:top-2 focus-visible:left-2">Skip to content</a>
+  <a href="#main" class="sr-only z-10 rounded-md bg-paper px-3 py-2 focus-visible:not-sr-only focus-visible:absolute focus-visible:top-2 focus-visible:left-2">{{ ui.skip }}</a>
   <header class="border-b border-rule">
     <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-3 sm:px-8">
-      <a href="{{ root }}" class="inline-flex min-h-11 items-center gap-2.5 font-mono text-sm font-semibold text-accent hover:underline">
+      <a href="{{ home }}" class="inline-flex min-h-11 items-center gap-2.5 font-mono text-sm font-semibold text-accent hover:underline">
         <span aria-hidden="true" class="size-2 rounded-full bg-accent"></span>{{ profile.handle }}
       </a>
-      <nav aria-label="Main">
+      <nav aria-label="{{ ui.main_nav }}">
         <ul class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-muted sm:gap-x-6">
-          {% for nav_section, label, path in [("blog", "Writing", ""), ("about", "About", "about/")] %}
+          {% for nav_section, label, path in [("blog", ui.writing, ""), ("about", ui.about, "about/")] %}
           <li>
-            <a href="{{ root }}{{ path }}" class="inline-flex min-h-11 items-center decoration-2 underline-offset-8 hover:text-accent hover:underline aria-[current=page]:font-bold aria-[current=page]:text-accent aria-[current=page]:underline aria-[current=location]:underline"
+            <a href="{{ home }}{{ path }}" class="inline-flex min-h-11 items-center decoration-2 underline-offset-8 hover:text-accent hover:underline aria-[current=page]:font-bold aria-[current=page]:text-accent aria-[current=page]:underline aria-[current=location]:underline"
               {% if section == nav_section %}aria-current="page"{% elif section == "post" and nav_section == "blog" %}aria-current="location"{% endif %}>{{ label }}</a>
           </li>
           {% endfor %}
           <li><a href="{{ profile.github }}" class="inline-flex min-h-11 items-center hover:text-accent hover:underline">GitHub <span class="ms-1" aria-hidden="true">↗</span></a></li>
           <li>
-            <button id="theme-toggle" type="button" hidden aria-label="Dark mode" aria-pressed="false" title="Dark mode"
+            <a href="{{ language_href }}" lang="{{ other_lang }}" hreflang="{{ other_lang }}"
+               class="inline-flex min-h-11 items-center text-accent underline underline-offset-4">{{ language_label }}</a>
+          </li>
+          <li>
+            <button id="theme-toggle" type="button" hidden aria-label="{{ ui.dark_mode }}" aria-pressed="false" title="{{ ui.dark_mode }}"
                     class="inline-grid size-11 shrink-0 cursor-pointer place-items-center rounded-md border border-rule hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent aria-pressed:border-accent aria-pressed:bg-soft/40 aria-pressed:text-accent">
               <span data-theme-icon="moon" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round">
@@ -50,7 +60,7 @@
   <footer class="border-t border-rule">
     <div class="mx-auto flex max-w-5xl flex-wrap items-baseline justify-between gap-x-6 gap-y-2 px-5 py-6 text-sm text-muted sm:px-8">
       <span>{{ profile.name }}</span>
-      <span>{{ profile.location }}</span>
+      <span>{{ profile.location[lang] }}</span>
     </div>
   </footer>
   {% include "_theme_toggle.html" %}

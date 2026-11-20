@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% from "_posts.html" import post_list %}
+{% from "_posts.html" import post_list with context %}
 
 {% block main %}
-<h1 class="mb-7 text-4xl font-bold tracking-tight sm:text-6xl">Writing</h1>
+<h1 class="mb-7 text-4xl font-bold tracking-tight sm:text-6xl">{{ ui.writing }}</h1>
 {{ post_list(posts, 2) }}
 {% endblock %}

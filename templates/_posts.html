@@ -6,14 +6,19 @@
     <a href="{{ post.url }}" class="group grid gap-1.5 px-1 py-5 hover:bg-soft/40 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-4 sm:px-3">
       <time datetime="{{ post.date.isoformat() }}" class="pt-1 text-sm text-muted tabular-nums">{{ post.date | short_date }}</time>
       <div>
-        <h{{ level }} class="text-lg font-bold tracking-tight text-accent group-hover:underline group-focus-visible:underline sm:text-xl">{{ post.title }}</h{{ level }}>
-        <p class="mt-1 text-sm leading-relaxed text-muted sm:text-base">{{ post.summary }}</p>
+        <div{% if post.lang != lang %} lang="{{ post.lang }}"{% endif %}>
+          <h{{ level }} class="text-lg font-bold tracking-tight text-accent group-hover:underline group-focus-visible:underline sm:text-xl">{{ post.title }}</h{{ level }}>
+          <p class="mt-1 text-sm leading-relaxed text-muted sm:text-base">{{ post.summary }}</p>
+        </div>
+        {% if post.lang != lang %}
+        <span class="mt-2 inline-block rounded border border-rule px-2 py-0.5 text-xs font-medium text-muted">{{ ui.untranslated }}</span>
+        {% endif %}
       </div>
     </a>
   </li>
   {% endfor %}
 </ul>
 {% else %}
-<p class="border-t border-rule py-5 text-muted">No posts yet.</p>
+<p class="border-t border-rule py-5 text-muted">{{ ui.empty }}</p>
 {% endif %}
 {% endmacro %}

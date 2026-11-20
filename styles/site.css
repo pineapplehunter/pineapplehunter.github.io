@@ -16,6 +16,9 @@
 }
 
 @layer base {
+  :root:lang(ja) {
+    --font-sans: system-ui, "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans CJK JP", sans-serif;
+  }
   a:focus-visible { @apply outline-2 outline-offset-4 outline-accent; }
 }
 

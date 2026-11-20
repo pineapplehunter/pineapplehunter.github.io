@@ -10,10 +10,15 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown_it import MarkdownIt
 from markupsafe import Markup
 
-mode, output, *sources = sys.argv[1:]
+mode, output, lang, site_root, alternate, *sources = sys.argv[1:]
 output = Path(output)
-depth = len(output.relative_to(".build/html").parent.parts)
-root = "../" * depth or "./"
+filename = output.relative_to(".build/html")
+depth = len(filename.parent.parts)
+# GitHub Pages can serve the 404 at any URL depth.
+root = site_root if mode == "404" else "../" * depth or "./"
+home = root + ("en/" if lang == "en" else "")
+other_lang = "en" if lang == "ja" else "ja"
+other_home = "en/" if other_lang == "en" else ""
 images = json.loads(Path(".build/images.json").read_text(encoding="utf-8"))
 
 md = MarkdownIt("commonmark", {"html": False})
@@ -64,8 +69,10 @@ def read_post(filename):
     metadata, body = text[4:].split("\n---\n", 1)
     fields = yaml.safe_load(metadata)
     published = date.fromisoformat(str(fields["date"]))
-    return {**fields, "body": body, "date": published,
-            "url": f'{root}blog/{path.stem}/'}
+    slug, post_lang = path.stem.rsplit(".", 1)
+    prefix = "en/" if post_lang == "en" else ""
+    return {**fields, "body": body, "date": published, "lang": post_lang,
+            "url": f"{root}{prefix}blog/{slug}/"}
 
 
 templates = Environment(
@@ -74,24 +81,41 @@ templates = Environment(
     trim_blocks=True,
     lstrip_blocks=True,
 )
-templates.filters["short_date"] = lambda value: value.strftime("%d %b %Y").lstrip("0")
+def short_date(value):
+    if lang == "ja":
+        return f"{value.year}年{value.month}月{value.day}日"
+    return value.strftime("%d %b %Y").lstrip("0")
+
+
+templates.filters["short_date"] = short_date
 profile = yaml.safe_load(Path("content/profile.yaml").read_text(encoding="utf-8"))
-context = dict(profile=profile, root=root, section=mode)
+ui = yaml.safe_load(Path("content/ui.yaml").read_text(encoding="utf-8"))[lang]
+site_url = profile["site_origin"].rstrip("/") + site_root
+alternate_url = alternate.removesuffix("index.html")
+alternates = {}
+if alternate and mode != "404":
+    alternates = {
+        lang: site_url + filename.as_posix().removesuffix("index.html"),
+        other_lang: site_url + alternate_url,
+    }
+context = dict(profile=profile, root=root, home=home, section=mode, lang=lang, ui=ui,
+               alternates=alternates, other_lang=other_lang,
+               language_href=root + (alternate_url if alternate else other_home),
+               language_label=ui["other_language" if alternate else "other_index"])
 if mode == "about":
     about, *posts = sources
-    context.update(title="About", description=profile["intro"],
+    context.update(title=ui["about"], description=profile["intro"][lang],
                    portrait=picture_attrs(profile["avatar"], "(min-width: 40rem) 12rem, 7rem"),
                    body=Markup(md.render(Path(about).read_text(encoding="utf-8"))))
 elif mode == "blog":
     posts = sources
-    context.update(title="Writing", description=f'Posts by {profile["name"]}.')
+    context.update(title=ui["writing"], description=ui["writing_description"])
 elif mode == "post":
     post = read_post(sources[0])
     context.update(title=post["title"], description=post["summary"],
                    post=post, body=Markup(md.render(post["body"])))
 elif mode == "404":
-    context.update(root=sources[0], title="404: Page not found",
-                   description="This page does not exist.")
+    context.update(title=f'404: {ui["not_found"]}', description=ui["not_found_description"])
 
 if mode in {"about", "blog"}:
     posts = sorted(map(read_post, posts), key=lambda post: post["date"], reverse=True)
