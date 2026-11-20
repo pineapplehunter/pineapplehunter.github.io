@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h1 class="mb-7 text-4xl font-bold tracking-tight sm:text-6xl">About</h1>
+<div class="entry-body">{{ body }}</div>
+
+<section class="mt-10 max-w-[42rem] border-t border-rule pt-6" aria-labelledby="elsewhere">
+  <h2 id="elsewhere" class="text-xl font-bold tracking-tight">Elsewhere</h2>
+  <ul class="mt-2 flex flex-wrap gap-x-6 text-sm font-medium text-indigo-ink">
+    <li><a class="inline-flex min-h-11 items-center underline underline-offset-4" href="{{ profile.github }}">GitHub</a></li>
+    {% for link in profile.elsewhere %}
+    <li><a class="inline-flex min-h-11 items-center underline underline-offset-4" href="{{ link.url }}">{{ link.label }}</a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

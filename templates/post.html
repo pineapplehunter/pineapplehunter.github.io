@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block main %}
+<article class="max-w-[42rem]">
+  <header class="mb-8 border-b border-rule pb-6">
+    <a href="{{ root }}blog/" class="mb-5 inline-block text-sm font-medium text-indigo-ink underline underline-offset-4">Back to writing</a>
+    <h1 class="text-4xl leading-tight font-bold tracking-tight sm:text-5xl">{{ post.title }}</h1>
+    <p class="mt-3 text-lg text-muted">{{ post.summary }}</p>
+    <time datetime="{{ post.date.isoformat() }}" class="mt-3 block text-sm text-muted">{{ post.date | short_date }}</time>
+  </header>
+  <div class="entry-body">{{ body }}</div>
+</article>
+{% endblock %}

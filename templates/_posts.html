@@ -1,0 +1,19 @@
+{% macro post_list(posts, level) %}
+{% if posts %}
+<ul class="border-y border-rule divide-y divide-rule">
+  {% for post in posts %}
+  <li>
+    <a href="{{ post.url }}" class="group grid gap-1.5 px-1 py-5 hover:bg-lilac/40 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-4 sm:px-3">
+      <time datetime="{{ post.date.isoformat() }}" class="pt-1 text-sm text-muted tabular-nums">{{ post.date | short_date }}</time>
+      <div>
+        <h{{ level }} class="text-lg font-bold tracking-tight text-indigo-ink group-hover:underline group-focus-visible:underline sm:text-xl">{{ post.title }}</h{{ level }}>
+        <p class="mt-1 text-sm leading-relaxed text-muted sm:text-base">{{ post.summary }}</p>
+      </div>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="border-t border-rule py-5 text-muted">No posts yet.</p>
+{% endif %}
+{% endmacro %}

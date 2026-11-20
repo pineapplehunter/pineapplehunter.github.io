@@ -1,0 +1,5 @@
+/.direnv
+result*
+/.build/
+/dist/
+__pycache__/

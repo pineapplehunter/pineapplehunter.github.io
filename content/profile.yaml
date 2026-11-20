@@ -1,0 +1,21 @@
+name: Shogo Takata
+handle: pineapplehunter
+location: Tokyo, Japan
+affiliation: Tokyo University of Agriculture and Technology
+avatar: avatar.png
+intro: "Personal site and blog of Shogo Takata, known as pineapplehunter on GitHub."
+github: https://github.com/pineapplehunter
+elsewhere:
+  - label: ORCID
+    url: https://orcid.org/0000-0002-0607-0224
+  - label: Bluesky
+    url: https://bsky.app/profile/pineapplehunter.bsky.social
+  - label: Mastodon
+    url: https://mastodon-japan.net/@pineapplehunter
+projects:
+  - name: nixos-config
+    url: https://github.com/pineapplehunter/nixos-config
+    description: Personal NixOS configuration and overlays.
+  - name: tuat-tex
+    url: https://github.com/pineapplehunter/tuat-tex
+    description: A LaTeX cover-page template for TUAT engineering lab reports.
