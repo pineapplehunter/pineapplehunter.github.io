@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from markdown_it import MarkdownIt
 from markupsafe import Markup
 
-mode, output, lang, site_root, alternate, *sources = sys.argv[1:]
+mode, output, lang, site_root, alternate, live_reload, *sources = sys.argv[1:]
 output = Path(output)
 filename = output.relative_to("dist")
 depth = len(filename.parent.parts)
@@ -100,6 +100,7 @@ if alternate and mode != "404":
     }
 context = dict(profile=profile, root=root, home=home, section=mode, lang=lang, ui=ui,
                alternates=alternates, other_lang=other_lang,
+               live_reload=live_reload == "1", reload_url=site_root + "__live_reload",
                language_href=root + (alternate_url if alternate else other_home),
                language_label=ui["other_language" if alternate else "other_index"])
 if mode == "about":

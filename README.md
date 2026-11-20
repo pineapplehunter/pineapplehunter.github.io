@@ -5,12 +5,12 @@ A static personal site for Shogo Takata. The build uses Python, Ninja, the Tailw
 ## Build and preview
 
 ```sh
-nix develop
-./build.sh
-python3 -m http.server --directory dist 8000
+nix develop -c ./watch.sh
 ```
 
-Open <http://localhost:8000>. `nix develop -c ./build.sh` also works without entering the shell. To preview Ninja's work without building, run `python3 configure.py` followed by `ninja -f .build/build.ninja -n`. `dist/` is generated-only; the generator removes files there that no longer have a target.
+Open <http://127.0.0.1:8000>. The script starts a local server that rebuilds on file changes and notifies the browser over a WebSocket after each successful rebuild. Set `PORT` to use another port, or pass `--base-path /my-repo` to build and preview under that URL path. Press Ctrl+C to stop both the server and the watcher.
+
+For a one-off build, run `nix develop -c ./build.sh`. Only builds configured with `--live-reload` embed the reload script; `watch.sh` passes that flag automatically. To preview Ninja's work without building, run `python3 configure.py` followed by `ninja -f .build/build.ninja -n`. `dist/` is generated-only; the generator removes files there that no longer have a target.
 
 ## Write a post
 

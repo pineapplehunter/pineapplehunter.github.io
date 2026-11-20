@@ -16,7 +16,10 @@ from tools.images import IMAGE_DIR, configure_images
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--base-path", default="/", help="URL path where the site is hosted (default: /)")
-base_path = parser.parse_args().base_path.strip("/")
+parser.add_argument("--live-reload", action="store_true",
+                    help="Embed the live-reload script for the local preview server")
+args = parser.parse_args()
+base_path = args.base_path.strip("/")
 site_root = f"/{base_path}/" if base_path else "/"
 
 work = Path(".build")
@@ -47,7 +50,9 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
         raise SystemExit("Install libjxl's cjxl or run nix develop -c ./build.sh")
     ninja.variable("cjxl", ninja_syntax.escape(shlex.quote(cjxl)))
     ninja.variable("site_root", ninja_syntax.escape(shlex.quote(site_root)))
-    ninja.rule("render", "$python tools/render.py $mode $out $lang $site_root $alternate $in",
+    ninja.variable("live_reload", "1" if args.live_reload else "0")
+    ninja.rule("render",
+               "$python tools/render.py $mode $out $lang $site_root $alternate $live_reload $in",
                "Render $out")
     # Tailwind leaves the output untouched when the generated CSS is unchanged.
     ninja.rule("tailwind", "$tailwindcss --input $in --output $out --minify --silent",
@@ -92,7 +97,14 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
             route = f"blog/{slug}/index.html"
             alternate = other_prefix + route if slug in posts[other] else ""
             page(prefix + route, "post", lang, [post], alternate)
-    ninja.build("site", "phony", outputs)
+    site_inputs = outputs
+    if args.live_reload:
+        # Signal the browser only after all site outputs are up to date.
+        stamp = str(work / "live-reload")
+        ninja.rule("reload_stamp", "touch $out", "Update live reload")
+        ninja.build(stamp, "reload_stamp", outputs)
+        site_inputs = [*outputs, stamp]
+    ninja.build("site", "phony", site_inputs)
     ninja.default("site")
 
 # dist/ is generated-only: don't deploy URLs left over after a rename or deletion.

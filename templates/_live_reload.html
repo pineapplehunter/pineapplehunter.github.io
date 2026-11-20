@@ -1,0 +1,20 @@
+<script>
+  (() => {
+    const url = new URL({{ reload_url | tojson }}, location.href);
+    url.protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    let version;
+
+    function connect() {
+      const socket = new WebSocket(url);
+      socket.onmessage = ({ data }) => {
+        if (version !== undefined && version !== data) {
+          location.reload();
+        }
+        version = data;
+      };
+      socket.onclose = () => setTimeout(connect, 1000);
+    }
+
+    connect();
+  })();
+</script>

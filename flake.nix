@@ -27,7 +27,17 @@
             packages = with pkgs; [
               libjxl.bin
               tailwindcss_4
-              (python3.withPackages (ps: with ps; [ jinja2 markdown-it-py ninja pillow pyyaml ]))
+              watchexec
+              (python3.withPackages (
+                ps: with ps; [
+                  jinja2
+                  markdown-it-py
+                  ninja
+                  pillow
+                  pyyaml
+                  tornado
+                ]
+              ))
             ];
           };
 
