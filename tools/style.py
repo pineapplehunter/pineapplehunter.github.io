@@ -15,7 +15,7 @@ if mode == "compile":
         entry.write(f'{stylesheet}\n@source "./{html.name}";\n')
         entry.flush()
         subprocess.run(
-            [tailwind, "--input", entry.name, "--output", output, "--minify"],
+            [tailwind, "--input", entry.name, "--output", output, "--silent"],
             check=True,
         )
 else:
