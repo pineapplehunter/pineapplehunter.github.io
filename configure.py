@@ -49,8 +49,9 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     ninja.variable("site_root", ninja_syntax.escape(shlex.quote(site_root)))
     ninja.rule("render", "$python tools/render.py $mode $out $lang $site_root $alternate $in",
                "Render $out")
-    ninja.rule("tailwind", "$python tools/style.py compile $in $out $tailwindcss", "Tailwind $out")
-    ninja.rule("inline", "$python tools/style.py inline $in $out", "Inline CSS $out")
+    # Tailwind leaves the output untouched when the generated CSS is unchanged.
+    ninja.rule("tailwind", "$tailwindcss --input $in --output $out --minify --silent",
+               "Tailwind $out", restat=True)
 
     images, outputs = configure_images(ninja, dist)
     profile = yaml.safe_load(Path("content/profile.yaml").read_text(encoding="utf-8"))
@@ -63,24 +64,21 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     if not manifest.exists() or manifest.read_text(encoding="utf-8") != data:
         manifest.write_text(data, encoding="utf-8")
 
-    render_deps = [
-        "tools/render.py",
-        "content/profile.yaml",
-        "content/ui.yaml",
-        str(manifest),
-        *map(str, sorted(Path("templates").glob("*.html"))),
-    ]
+    templates = list(map(str, sorted(Path("templates").glob("*.html"))))
+    ninja.build("template-inputs", "phony", templates)
+    stylesheet = str(dist / "assets/site.css")
+    ninja.build(stylesheet, "tailwind", "styles/site.css", implicit="template-inputs")
+    outputs.append(stylesheet)
+
+    ninja.build("render-inputs", "phony",
+                ["template-inputs", "tools/render.py", "content/profile.yaml",
+                 "content/ui.yaml", str(manifest)], order_only=stylesheet)
 
     def page(filename, mode, lang, sources=(), alternate=""):
-        html = work / "html" / filename
-        css = work / "css" / Path(filename).with_suffix(".css")
-        final = dist / filename
-        ninja.build(str(html), "render", list(map(str, sources)), implicit=render_deps,
+        html = str(dist / filename)
+        ninja.build(html, "render", list(map(str, sources)), implicit="render-inputs",
                     variables={"mode": mode, "lang": lang, "alternate": shlex.quote(alternate)})
-        ninja.build(str(css), "tailwind", str(html),
-                    implicit=["styles/site.css", "tools/style.py"])
-        ninja.build(str(final), "inline", [str(html), str(css)], implicit="tools/style.py")
-        outputs.append(str(final))
+        outputs.append(html)
 
     for lang, prefix in prefixes.items():
         other = "en" if lang == "ja" else "ja"

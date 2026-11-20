@@ -1,4 +1,5 @@
 @import "tailwindcss" source(none);
+@source "../templates";
 
 @theme inline {
   --color-paper: var(--page-paper);

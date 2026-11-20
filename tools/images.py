@@ -1,6 +1,5 @@
 """Register responsive image encodes and expose sizes to the HTML renderer."""
 
-import subprocess
 import sys
 from pathlib import Path
 
@@ -11,8 +10,11 @@ WIDTHS = (240, 480, 960)
 
 
 def configure_images(ninja, dist):
-    ninja.rule("image", "$python tools/images.py $cjxl $in $width $height $out", "Images $out")
-    manifest, outputs = {}, []
+    for ext in ("png", "webp"):
+        ninja.rule(ext, f"$python tools/images.py {ext} $in $out $width $height", f"{ext.upper()} $out")
+    ninja.rule("jxl", "$cjxl $in $out --quality=90 --num_threads=1 --quiet", "JPEG XL $out")
+    manifest = {}
+    outputs = {ext: [] for ext in ("png", "webp", "jxl")}
     for source in sorted(IMAGE_DIR.rglob("*")):
         if source.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
             continue
@@ -28,13 +30,18 @@ def configure_images(ninja, dist):
         for w in sorted({min(candidate, width) for candidate in WIDTHS}):
             h = max(1, round(w * height / width))
             stem = Path("media") / name.with_name(f"{name.name}-{w}")
-            targets = [str(dist / f"{stem.as_posix()}.{ext}") for ext in ("jxl", "webp", "png")]
-            ninja.build(targets, "image", str(source), implicit="tools/images.py",
-                        variables={"width": str(w), "height": str(h)})
-            outputs.extend(targets)
+            targets = {ext: str(dist / f"{stem.as_posix()}.{ext}") for ext in outputs}
+            for ext in ("png", "webp"):
+                ninja.build(targets[ext], ext, str(source), implicit="tools/images.py",
+                            variables={"width": str(w), "height": str(h)})
+            ninja.build(targets["jxl"], "jxl", targets["png"])
+            for ext, target in targets.items():
+                outputs[ext].append(target)
             variants.append({"stem": stem.as_posix(), "width": w, "height": h})
         manifest[name.as_posix()] = variants
-    return manifest, outputs
+    for ext, targets in outputs.items():
+        ninja.build(f"images-{ext}", "phony", targets)
+    return manifest, [target for targets in outputs.values() for target in targets]
 
 
 if __name__ == "__main__":
@@ -46,12 +53,13 @@ if __name__ == "__main__":
             icon.save(output, "PNG", optimize=True)
         sys.exit(0)
 
-    _, cjxl, source, width, height, jxl, webp, png = sys.argv
+    _, ext, source, output, width, height = sys.argv
     with Image.open(source) as image:
         image = ImageOps.exif_transpose(image)
         # Convert palette and grayscale images too, preserving any transparency.
         mode = "RGBA" if "A" in image.getbands() or "transparency" in image.info else "RGB"
         resized = image.convert(mode).resize((int(width), int(height)), Image.Resampling.LANCZOS)
-        resized.save(webp, "WEBP", quality=84)
-        resized.save(png, "PNG", optimize=True)
-    subprocess.run([cjxl, png, jxl, "--quality=90", "--num_threads=1", "--quiet"], check=True)
+        if ext == "png":
+            resized.save(output, "PNG", optimize=True)
+        else:
+            resized.save(output, "WEBP", quality=84)

@@ -1,4 +1,4 @@
-"""Render Markdown and Jinja templates to unstyled HTML for Tailwind."""
+"""Render Markdown and Jinja templates into the static site."""
 
 import json
 import sys
@@ -12,7 +12,7 @@ from markupsafe import Markup
 
 mode, output, lang, site_root, alternate, *sources = sys.argv[1:]
 output = Path(output)
-filename = output.relative_to(".build/html")
+filename = output.relative_to("dist")
 depth = len(filename.parent.parts)
 # GitHub Pages can serve the 404 at any URL depth.
 root = site_root if mode == "404" else "../" * depth or "./"

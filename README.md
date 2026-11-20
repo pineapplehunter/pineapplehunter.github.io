@@ -1,6 +1,6 @@
 # pineapplehunter's website
 
-A static personal site for Shogo Takata. The build uses Python, Ninja, the Tailwind v4 standalone CLI, Pillow, and libjxl; the published site needs no JavaScript except for the optional theme override.
+A static personal site for Shogo Takata. The build uses Python, Ninja, the Tailwind v4 standalone CLI, Pillow, and libjxl; the site works without JavaScript, which is used for the theme override and non-blocking stylesheet loading.
 
 ## Build and preview
 
@@ -38,17 +38,13 @@ Put a JPG, PNG, or WebP under `assets/images/`, then reference it as a Markdown 
 ![Description of the photo](media/bench.jpg)
 ```
 
-The build generates JPEG XL, WebP, and PNG variants up to 240, 480, and 960 pixels wide, without upscaling. A native `<picture>` lets the browser choose the first format it supports in that order and pick a responsive size. Nested folders work; use the same relative path after `media/`.
+The build generates JPEG XL, WebP, and PNG variants up to 240, 480, and 960 pixels wide, without upscaling. A native `<picture>` lets the browser choose the first format it supports in that order and pick a responsive size. Nested folders work; use the same relative path after `media/`. Each format and size has its own Ninja output. After configuring, run `ninja -f .build/build.ninja images-jxl`, `images-webp`, or `images-png` to build one format. JPEG XL reuses the resized PNG as its input.
 
 `./build.sh` runs `configure.py`, which uses `ninja.ninja_syntax` to emit `.build/build.ninja`. The script forwards all arguments to `configure.py`. For a project site, run `./build.sh --base-path /my-repo`; the default is `/`. To use Ninja options, run Ninja directly after configuring.
 
-Each page follows this chain:
+Ninja renders Markdown and Jinja directly to HTML in `dist/` and compiles one minified stylesheet to `dist/assets/site.css`. Tailwind scans the templates, so both languages use the same asset. Pages keep their initial theme colors inline and fetch the shared stylesheet without blocking rendering. If JavaScript is disabled, a regular stylesheet link applies instead.
 
-```text
-Markdown + Jinja → intermediate HTML → per-page Tailwind CSS → dist HTML with inline CSS
-```
-
-Tailwind scans only the intermediate HTML for that page. Edit its theme in `styles/site.css`. To add another preprocessor, follow `tools/images.py`: register a Ninja rule and its input/output edges in `configure.py`, then include the generated files in the `site` target. If rendering consumes a generated file, add it to the render edge's inputs.
+Edit the Tailwind theme in `styles/site.css`. To add another preprocessor, follow `tools/images.py`: register a Ninja rule and its input/output edges in `configure.py`, then include the generated files in the `site` target. If rendering consumes a generated file, add it to the render edge's inputs.
 
 ## Publish to GitHub Pages
 
