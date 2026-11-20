@@ -1,3 +1,3 @@
-Shogo Takata is based in Tokyo, Japan. His GitHub profile lists Tokyo University of Agriculture and Technology as his affiliation.
+I’m Shogo Takata, and I’m based in Tokyo, Japan. I list Tokyo University of Agriculture and Technology as my affiliation on GitHub.
 
-His [GitHub profile README](https://github.com/pineapplehunter/pineapplehunter) mentions learning bare-metal programming. His public repositories include a personal NixOS configuration and a LaTeX template for university lab reports.
+I’ve been learning bare-metal programming, which I mention in my [GitHub profile README](https://github.com/pineapplehunter/pineapplehunter). I also share my NixOS configuration and a LaTeX template for university lab reports on GitHub.
