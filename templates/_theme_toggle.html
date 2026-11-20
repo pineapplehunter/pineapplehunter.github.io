@@ -5,7 +5,12 @@
     const system = matchMedia("(prefers-color-scheme: dark)");
     const systemTheme = () => system.matches ? "dark" : "light";
     const activeTheme = () => scheme.content === "light dark" ? systemTheme() : scheme.content;
-    const updateButton = () => button.setAttribute("aria-pressed", activeTheme() === "dark");
+    const updateButton = () => {
+      const dark = activeTheme() === "dark";
+      button.setAttribute("aria-pressed", dark);
+      button.querySelector('[data-theme-icon="moon"]').hidden = dark;
+      button.querySelector('[data-theme-icon="sun"]').hidden = !dark;
+    };
 
     button.addEventListener("click", () => {
       const next = activeTheme() === "dark" ? "light" : "dark";
