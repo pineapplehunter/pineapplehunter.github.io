@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Discover content and write the Ninja build graph (run via ./build.sh)."""
 
+import argparse
 import json
 import re
 import shlex
@@ -11,6 +12,11 @@ from pathlib import Path
 from ninja import ninja_syntax
 
 from tools.images import configure_images
+
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--base-path", default="/", help="URL path where the site is hosted (default: /)")
+base_path = parser.parse_args().base_path.strip("/")
+site_root = f"/{base_path}/" if base_path else "/"
 
 work = Path(".build")
 dist = Path("dist")
@@ -29,7 +35,11 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     if not tailwind:
         raise SystemExit("Install Tailwind CSS v4 or run nix develop -c ./build.sh")
     ninja.variable("tailwindcss", ninja_syntax.escape(shlex.quote(tailwind)))
-    ninja.rule("render", "$python tools/render.py $mode $out $in", "Markdown $out")
+    cjxl = shutil.which("cjxl")
+    if not cjxl:
+        raise SystemExit("Install libjxl's cjxl or run nix develop -c ./build.sh")
+    ninja.variable("cjxl", ninja_syntax.escape(shlex.quote(cjxl)))
+    ninja.rule("render", "$python tools/render.py $mode $out $args $in", "Render $out")
     ninja.rule("tailwind", "$python tools/style.py compile $in $out $tailwindcss", "Tailwind $out")
     ninja.rule("inline", "$python tools/style.py inline $in $out", "Inline CSS $out")
 
@@ -46,22 +56,23 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
         *map(str, sorted(Path("templates").glob("*.html"))),
     ]
 
-    def page(route, mode, sources):
-        html = work / "html" / route / "index.html"
-        css = work / "css" / route / "index.css"
-        final = dist / route / "index.html"
+    def page(filename, mode, sources=(), args=""):
+        html = work / "html" / filename
+        css = work / "css" / Path(filename).with_suffix(".css")
+        final = dist / filename
         ninja.build(str(html), "render", list(map(str, sources)), implicit=render_deps,
-                    variables={"mode": mode})
+                    variables={"mode": mode, "args": args})
         ninja.build(str(css), "tailwind", str(html),
                     implicit=["styles/site.css", "tools/style.py"])
         ninja.build(str(final), "inline", [str(html), str(css)], implicit="tools/style.py")
         outputs.append(str(final))
 
-    page("", "home", posts)
-    page("about", "about", ["content/about.md"])
-    page("blog", "blog", posts)
+    page("index.html", "blog", posts)
+    page("about/index.html", "about", ["content/about.md", *posts])
+    # A 404 can be served at any URL depth, so it needs site-rooted links.
+    page("404.html", "404", args=ninja_syntax.escape(shlex.quote(site_root)))
     for post in posts:
-        page(f"blog/{post.stem}", "post", [post])
+        page(f"blog/{post.stem}/index.html", "post", [post])
     ninja.build("site", "phony", outputs)
     ninja.default("site")
 

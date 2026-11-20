@@ -10,7 +10,7 @@ This site starts as a directory of Markdown files. Each post has a title, date, 
 
 `./build.sh` runs `configure.py` to discover the content and write a Ninja build graph. Ninja renders the pages, compiles Tailwind against each page's HTML, and embeds the resulting CSS. The browser doesn't need a separate stylesheet or a JavaScript bundle.
 
-Image processing uses the same build graph. Local images can be referenced from Markdown, and the build generates smaller WebP variants so the browser can choose a size that fits.
+Image processing uses the same build graph. Local images can be referenced from Markdown, and the build generates responsive JPEG XL, WebP, and PNG variants so the browser can pick a supported format and a size that fits.
 
 ## Preview locally
 

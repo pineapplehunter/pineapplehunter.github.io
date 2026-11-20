@@ -1,0 +1,13 @@
+{% macro picture(image, alt, title=none, lazy=false, priority=none, picture_class=none, img_class=none) %}
+<picture{% if picture_class %} class="{{ picture_class }}"{% endif %}>
+  {% for type, srcset in image.sources %}
+  <source type="{{ type }}" srcset="{{ srcset }}" sizes="{{ image.sizes }}">
+  {% endfor %}
+  <img src="{{ image.src }}" srcset="{{ image.srcset }}" sizes="{{ image.sizes }}"
+       width="{{ image.width }}" height="{{ image.height }}" alt="{{ alt }}"
+       {%- if title is not none %} title="{{ title }}"{% endif %}
+       {%- if lazy %} loading="lazy" decoding="async"{% endif %}
+       {%- if priority %} fetchpriority="{{ priority }}"{% endif %}
+       {%- if img_class %} class="{{ img_class }}"{% endif %}>
+</picture>
+{% endmacro %}

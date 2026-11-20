@@ -19,14 +19,19 @@ images = json.loads(Path(".build/images.json").read_text(encoding="utf-8"))
 md = MarkdownIt("commonmark", {"html": False})
 
 
-def image_attrs(name, sizes):
+def picture_attrs(name, sizes):
     if name not in images:
         raise SystemExit(f"Missing local image: assets/images/{name}")
     variants = images[name]
     largest = variants[-1]
+
+    def srcset(ext):
+        return ", ".join(f'{root}{v["stem"]}.{ext} {v["width"]}w' for v in variants)
+
     return {
-        "src": root + variants[min(1, len(variants) - 1)]["url"],
-        "srcset": ", ".join(f'{root}{v["url"]} {v["width"]}w' for v in variants),
+        "sources": [(f"image/{ext}", srcset(ext)) for ext in ("jxl", "webp")],
+        "src": root + variants[min(1, len(variants) - 1)]["stem"] + ".png",
+        "srcset": srcset("png"),
         "sizes": sizes,
         "width": largest["width"],
         "height": largest["height"],
@@ -37,10 +42,12 @@ def render_image(tokens, idx, options, env):
     token = tokens[idx]
     src = token.attrGet("src")
     if src.startswith("media/"):
-        for key, value in image_attrs(
+        image = picture_attrs(
             src.removeprefix("media/"), "(min-width: 48rem) 42rem, calc(100vw - 2.5rem)"
-        ).items():
-            token.attrSet(key, str(value))
+        )
+        alt = md.renderer.renderInlineAsText(token.children, options, env)
+        picture = templates.get_template("_picture.html").module.picture
+        return picture(image, alt, title=token.attrGet("title"), lazy=True).strip()
     token.attrSet("loading", "lazy")
     token.attrSet("decoding", "async")
     return md.renderer.image(tokens, idx, options, env)
@@ -70,21 +77,24 @@ templates = Environment(
 templates.filters["short_date"] = lambda value: value.strftime("%d %b %Y").lstrip("0")
 profile = yaml.safe_load(Path("content/profile.yaml").read_text(encoding="utf-8"))
 context = dict(profile=profile, root=root, section=mode)
-if mode == "home":
-    context.update(title=profile["name"], description=profile["intro"],
-                   portrait=image_attrs(profile["avatar"], "(min-width: 40rem) 12rem, 7rem"))
-elif mode == "about":
-    context.update(title="About", description=f'About {profile["name"]}.',
-                   body=Markup(md.render(Path(sources[0]).read_text(encoding="utf-8"))))
+if mode == "about":
+    about, *posts = sources
+    context.update(title="About", description=profile["intro"],
+                   portrait=picture_attrs(profile["avatar"], "(min-width: 40rem) 12rem, 7rem"),
+                   body=Markup(md.render(Path(about).read_text(encoding="utf-8"))))
 elif mode == "blog":
+    posts = sources
     context.update(title="Writing", description=f'Posts by {profile["name"]}.')
 elif mode == "post":
     post = read_post(sources[0])
     context.update(title=post["title"], description=post["summary"],
                    post=post, body=Markup(md.render(post["body"])))
+elif mode == "404":
+    context.update(root=sources[0], title="404: Page not found",
+                   description="This page does not exist.")
 
-if mode in {"home", "blog"}:
-    posts = sorted(map(read_post, sources), key=lambda post: post["date"], reverse=True)
-    context["posts"] = posts[:3] if mode == "home" else posts
+if mode in {"about", "blog"}:
+    posts = sorted(map(read_post, posts), key=lambda post: post["date"], reverse=True)
+    context["posts"] = posts[:3] if mode == "about" else posts
 output.write_text(templates.get_template(f"{mode}.html").render(context) + "\n",
                   encoding="utf-8")

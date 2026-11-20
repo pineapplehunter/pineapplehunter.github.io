@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block main %}
+<section class="max-w-[42rem] rounded-2xl bg-indigo-ink p-6 text-white sm:p-9" aria-labelledby="error-title">
+  <p class="font-mono text-sm font-semibold text-gold">404</p>
+  <h1 id="error-title" class="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">Page not found</h1>
+  <p class="mt-4 text-lilac">This page may have moved, or the address may be wrong.</p>
+  <a href="{{ root }}" class="mt-6 inline-flex min-h-11 items-center rounded-md bg-gold px-4 text-sm font-bold text-ink hover:bg-white focus-visible:outline-gold">Back to writing</a>
+</section>
+{% endblock %}
