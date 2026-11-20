@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="590" viewBox="0 0 560 590" xml:lang="en">
+  <title>How Ninja embeds the measured page size</title>
+  <style>
+    svg {
+      --card: #fcfbff; --draft: #efecf8; --output: #e6e0ff; --ink: #221e38;
+      --muted: #554e6b; --border: #a59abb; --line: #635586; --tool: #302866; --tool-ink: #fff;
+    }
+    @media (prefers-color-scheme: dark) {
+      svg {
+        --card: #31294a; --draft: #251f38; --output: #433563; --ink: #f2eef9;
+        --muted: #c7bedc; --border: #8476a4; --line: #b7a9db; --tool: #d6c9ff; --tool-ink: #221e38;
+      }
+    }
+    text { font: 600 23px system-ui, sans-serif; text-anchor: middle; fill: var(--ink); }
+    .detail { font: 19px system-ui, sans-serif; fill: var(--muted); }
+    .code { font-family: ui-monospace, monospace; }
+    .card, .draft, .output { fill: var(--card); stroke: var(--border); stroke-width: 1.5; }
+    .draft { fill: var(--draft); stroke-dasharray: 5 4; }
+    .output { fill: var(--output); }
+    .tool { fill: var(--tool); }
+    .tool-label { fill: var(--tool-ink); font-size: 22px; }
+    .edge, .join { fill: none; stroke: var(--line); stroke-width: 2; }
+    .edge { marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 9 8" refX="8.5" refY="4" markerWidth="9" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0l9 4-9 4z" fill="var(--line)"/>
+    </marker>
+  </defs>
+  <g class="edge">
+    <path d="M140 66v24"/>
+    <path d="M420 66v24"/>
+    <path d="M140 132v24"/>
+    <path d="M420 132v24"/>
+    <path d="M264 194h16v96h16"/>
+    <path d="M420 232v34"/>
+    <path d="M420 314v22"/>
+    <path d="M280 418v22"/>
+    <path d="M280 488v24"/>
+  </g>
+  <path class="join" d="M264 40h16v154 M140 232v186h280v-18"/>
+  <circle cx="280" cy="194" r="3" fill="var(--line)"/>
+
+  <rect class="card" x="16" y="14" width="248" height="52" rx="4"/>
+  <text x="140" y="48">Source Markdown</text>
+  <rect class="card" x="296" y="14" width="248" height="52" rx="4"/>
+  <text x="420" y="48">CSS + images</text>
+
+  <rect class="tool" x="16" y="90" width="248" height="42" rx="4"/>
+  <text class="tool-label code" x="140" y="118">render.py + Jinja</text>
+  <rect class="tool" x="296" y="90" width="248" height="42" rx="4"/>
+  <text class="tool-label" x="420" y="118">Generate assets</text>
+
+  <rect class="draft" x="16" y="156" width="248" height="76" rx="4"/>
+  <text x="140" y="186">Rendered HTML</text>
+  <text class="detail code" x="140" y="213">.build/unmeasured/…</text>
+  <rect class="card" x="296" y="156" width="248" height="76" rx="4"/>
+  <text x="420" y="186">Built assets</text>
+  <text class="detail" x="420" y="213">CSS, diagrams, favicon</text>
+
+  <rect class="tool" x="296" y="266" width="248" height="48" rx="4"/>
+  <text class="tool-label" x="420" y="298">Measure sizes</text>
+
+  <rect class="card" x="296" y="336" width="248" height="64" rx="4"/>
+  <text x="420" y="363">Measured sizes</text>
+  <text class="detail" x="420" y="386">Raw and gzipped</text>
+
+  <rect class="tool" x="98" y="440" width="364" height="48" rx="4"/>
+  <text class="tool-label" x="280" y="472">Insert sizes into HTML</text>
+
+  <rect class="output" x="128" y="512" width="304" height="64" rx="4"/>
+  <text x="280" y="538">Published HTML</text>
+  <text class="detail code" x="280" y="563">dist/…/index.html</text>
+</svg>

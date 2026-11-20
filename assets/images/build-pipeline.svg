@@ -64,7 +64,7 @@
     <text class="tool-label" x="104" y="278">Python</text>
     <rect class="output" x="24" y="316" width="160" height="66" rx="4"/>
     <text x="104" y="343">HTML</text>
-    <text class="path" x="104" y="367">…/index.html</text>
+    <text class="detail" x="104" y="367">記事はサイズ計測</text>
   </g>
   <g>
     <rect class="card" x="200" y="158" width="160" height="66" rx="4"/>

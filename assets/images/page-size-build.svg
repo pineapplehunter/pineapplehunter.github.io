@@ -38,15 +38,16 @@
     <path d="M280 418v22"/>
     <path d="M280 488v24"/>
   </g>
-  <path class="join" d="M140 232v186h280v-18"/>
+  <path class="join" d="M264 40h16v154 M140 232v186h280v-18"/>
+  <circle cx="280" cy="194" r="3" fill="var(--line)"/>
 
   <rect class="card" x="16" y="14" width="248" height="52" rx="4"/>
-  <text x="140" y="48">Markdown ＋ Jinja</text>
+  <text x="140" y="48">元の Markdown</text>
   <rect class="card" x="296" y="14" width="248" height="52" rx="4"/>
   <text x="420" y="48">CSS・画像の素材</text>
 
   <rect class="tool" x="16" y="90" width="248" height="42" rx="4"/>
-  <text class="tool-label code" x="140" y="118">render.py</text>
+  <text class="tool-label code" x="140" y="118">render.py + Jinja</text>
   <rect class="tool" x="296" y="90" width="248" height="42" rx="4"/>
   <text class="tool-label" x="420" y="118">アセットの生成</text>
 

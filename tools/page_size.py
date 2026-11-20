@@ -1,4 +1,4 @@
-"""Measure rendered HTML and its local assets, then fill in the size markers."""
+"""Measure Markdown, rendered HTML, and its assets, then fill in the size markers."""
 
 import gzip
 import sys
@@ -6,7 +6,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-MARKERS = (b"@@PAGE-HTML@@", b"@@PAGE-HTML-GZIP@@",
+MARKERS = (b"@@PAGE-MARKDOWN@@", b"@@PAGE-HTML@@", b"@@PAGE-HTML-GZIP@@",
            b"@@PAGE-TOTAL@@", b"@@PAGE-TOTAL-GZIP@@")
 
 
@@ -56,7 +56,7 @@ def gzip_size(data):
     return len(gzip.compress(data, compresslevel=9, mtime=0))
 
 
-def main(rendered, output, site_root):
+def main(rendered, source, output, site_root):
     html = rendered.read_bytes()
     html_size, html_gzip = len(html), gzip_size(html)
     total_size, total_gzip = html_size, html_gzip
@@ -65,11 +65,12 @@ def main(rendered, output, site_root):
         total_size += len(data)
         total_gzip += gzip_size(data)
 
-    for marker, size in zip(MARKERS, (html_size, html_gzip, total_size, total_gzip), strict=True):
+    sizes = (source.stat().st_size, html_size, html_gzip, total_size, total_gzip)
+    for marker, size in zip(MARKERS, sizes, strict=True):
         html = html.replace(marker, f"{size / 1024:.1f} KiB".encode("ascii"))
     output.write_bytes(html)
 
 
 if __name__ == "__main__":
-    _, rendered, output, site_root = sys.argv
-    main(Path(rendered), Path(output), site_root)
+    _, rendered, source, output, site_root = sys.argv
+    main(Path(rendered), Path(source), Path(output), site_root)

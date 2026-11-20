@@ -6,7 +6,7 @@ summary: 独自のビルド手順を使ってMarkdownから静的ページを生
 
 ## はじめに
 このページはこのサイトをどのように設計したのかについて、私なりに工夫した点についてまとめている。
-このページは**markdownで記述**され、静的サイトとして**ninjaで生成**されている。
+このページは**markdownで記述**され、主にCに使われるビルドツール**ninjaも用いて静的サイトを生成**されている。
 なぜそのような設計にしたかも含めて書いていこうかと思う。
 
 この記事は、画像やCSSを含めても、gzip圧縮後で約 **@@PAGE-TOTAL-GZIP@@** になった。内訳と測り方は「実際のページサイズ」で紹介する。
@@ -25,17 +25,17 @@ HTTP Archive[^archive]によると、2026年11月時点でのデスクトップ�
 
 他にもいくつか例は挙げられるが[^howbig][^filesize]、このようなテキストが基本のページで3MB使うのは非常にもったいない。
 
-このmarkdownファイルのサイズは10KBにも満たないものである。
+この記事の元のMarkdownファイルは **@@PAGE-MARKDOWN@@** しかない。
 それをレンダリングするために、数百KBのJavascriptライブラリを読み込んで数百KBのスタイルシートを読み込んで、さらに広告までつけてしまうのは非常にもったいなく感じられる。
 
 このサイトの内容は基本的にテキストベースでたまに図が出てくる程度なので、一つ一つのページをできるだけ軽量にしたい。
 
-[^archive]: https://httparchive.org/reports/page-weight
-[^paper]: https://www.techwalla.com/articles/how-many-printed-pages-is-one-megabyte
-[^mp3]: https://filesize.org/calculators/audio-file-size/
-[^bill]: https://www.computerworld.com/article/1563853/the-640k-quote-won-t-go-away-but-did-gates-really-say-it.html
-[^howbig]: https://usefoyer.com/how-big-is/1-megabyte
-[^filesize]: https://kordu.tools/blog/file-size-reference-how-big-is-a-megabyte/
+[^archive]: <https://httparchive.org/reports/page-weight>
+[^paper]: <https://www.techwalla.com/articles/how-many-printed-pages-is-one-megabyte>
+[^mp3]: <https://filesize.org/calculators/audio-file-size/>
+[^bill]: <https://www.computerworld.com/article/1563853/the-640k-quote-won-t-go-away-but-did-gates-really-say-it.html>
+[^howbig]: <https://usefoyer.com/how-big-is/1-megabyte>
+[^filesize]: <https://kordu.tools/blog/file-size-reference-how-big-is-a-megabyte/>
 
 ## どうすればページは軽量になるのか。
 **ページをHTMLだけで記述すれば良い。**
@@ -49,12 +49,12 @@ HTMLだけを利用する利点も多くあるが[^vanilla][^14k]、軽くデザ
 例えばCSSのライブラリであるTailwindはソースをすべて読み込み必要なCSSだけを出力することができる。
 また、テーマ選択程度であればライブラリは必要ないので直接書き込めば良い。
 
-[^vanilla]: https://www.vanillahtml.com/blog/html-is-enough
-[^14k]: https://jaimebuilds.com/lab/the-14kb-rule/
+[^vanilla]: <https://www.vanillahtml.com/blog/html-is-enough>
+[^14k]: <https://jaimebuilds.com/lab/the-14kb-rule/>
 
 ## Markdownのレンダリング
 では書かれたMarkdownをどのようにHTMLに変換するのか。
-一般的にはHugo[^hugo]やVuepress[^vuepress]等の静的サイトジェネレータを活用することが多い。しかし、単純なレンダリングはこのようなツール無しで実現できる。
+一般的にはHugo[^hugo]やVuepress[^vuepress]等の静的サイトジェネレータを活用することが多い。しかし、独自のビルドパイプラインが必要な際には汎用のビルドツールを使うてもある。
 特にAIが使える現在、MarkdownからHTMLを適当なテンプレートを使ったレンダリングをするというスクリプトを書くのは非常に簡単である。
 何なら自分で書くとしてもMarkdownの読み込みはそこまで難しくないため、独自のレンダリングエンジンを作るのはそこそこ容易である。
 本サイトはAIに作らせたPythonのスクリプトでhtmlを生成し、画像の返還等の処理を含めてninja[^ninja]と呼ばれるビルドツールでビルドしている。
@@ -76,10 +76,10 @@ ninjaは主にcmakeやmesonなどのC,C++のビルドツールとして使われ
 単純にHTMLのレンダリングをするだけであれば既存の仕組みを使うほうが良いのではないかと思う方もいると思うが、この仕組みを使った面白いことがこのページサイズの計測のために使われているのでもう少し読んでもらいたい。
 また、この仕組みを応用して、watchexec[^watchexec]と組み合わせたLive Reloadも簡単に実現できている。
 
-[^hugo]: https://gohugo.io/
-[^vuepress]: https://vuepress.vuejs.org/
-[^ninja]: https://ninja-build.org/
-[^watchexec]: https://watchexec.github.io/
+[^hugo]: <https://gohugo.io/>
+[^vuepress]: <https://vuepress.vuejs.org/>
+[^ninja]: <https://ninja-build.org/>
+[^watchexec]: <https://watchexec.github.io/>
 
 ## ブラウザに表示するためにはHTMLしかいらない
 このページはHTMLのみで表示できる。
@@ -90,15 +90,16 @@ JavaScriptやCSSはあくまで補助的な役割でしかないため、この�
 
 ## 実際のページサイズ
 
+- **元のMarkdown**：@@PAGE-MARKDOWN@@
 - **HTMLだけ**：@@PAGE-HTML@@（gzip圧縮後：@@PAGE-HTML-GZIP@@）
 - **HTMLとすべてのアセット**：@@PAGE-TOTAL@@（gzip圧縮後：@@PAGE-TOTAL-GZIP@@）
 
-![page_size.pyはレンダリング済みのHTMLと配信用アセットからサイズを求める。計測値と元のHTMLを合わせ、プレースホルダーを置き換えた公開用HTMLをdist/に書き出す。](media/page-size-build.svg "ページサイズをHTMLに埋め込む手順")
+![page_size.pyは元のMarkdown、レンダリング済みのHTML、配信用アセットからそれぞれのサイズを求める。計測値と元のHTMLを合わせ、プレースホルダーを置き換えた公開用HTMLをdist/に書き出す。](media/page-size-build.svg "ページサイズをHTMLに埋め込む手順")
 
 2節前にどうしてninjaを用いてわざわざ複雑なビルドを行うのか不思議に感じらてた方もいるかもしれないが、このようなレンダリング結果のサイズを埋め込むような面白い実装も静的に記述できるからである。
 もちろんこれはJavascriptを用いていない。
 
-Ninjaでは、計測前のHTMLと配信するアセットを計測ステップの入力にしている。両方がそろってから、HTML本体と、そこから直接参照するローカルのファイル（共通CSS、図、ファビコン）を重複なく数える。非圧縮の値はそれぞれのファイルのバイト数の合計で、gzipの値は各ファイルを別々にレベル9で圧縮したときの合計だ。
+Ninjaでは、元のMarkdown、計測前のHTML、配信用アセットを計測ステップの入力にしている。Markdownは元ファイルのバイト数をそのまま示す。配信時に送られないので、ページ全体のサイズには含めない。ページ全体の計測では、HTML本体と、そこから直接参照するローカルのファイル（共通CSS、図、ファビコン）を重複なく数える。非圧縮の値はそれぞれのファイルのバイト数の合計で、gzipの値は各ファイルを別々にレベル9で圧縮したときの合計だ。
 
 計測が終わったら、Markdownに書いたプレースホルダーを生成済みのHTML内で数値に置き換える。この置き換えでHTMLのサイズがわずかに変わるため、表示している値は概算になる。また、HTTPヘッダーやキャッシュは考慮していないので、ブラウザーでの実際の転送量とは異なる。
 

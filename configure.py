@@ -89,7 +89,8 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
             source = sources[0].read_bytes()
             if any(marker in source for marker in MARKERS):
                 rendered = str(work / "unmeasured" / filename)
-                ninja.build(html, "page_size", rendered, implicit="page-size-inputs")
+                ninja.build(html, "page_size", [rendered, str(sources[0])],
+                            implicit="page-size-inputs")
         ninja.build(rendered, "render", list(map(str, sources)), implicit="render-inputs",
                     variables={"mode": mode, "lang": lang, "alternate": shlex.quote(alternate)})
         outputs.append(html)
