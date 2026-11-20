@@ -16,6 +16,11 @@
   } catch {}
 </script>
 <style>
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root),
+    ::view-transition-new(root) { animation-duration: 140ms; }
+  }
   :root {
     color-scheme: light dark;
     --page-paper: #f6f5fb;
