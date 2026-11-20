@@ -1,0 +1,42 @@
+{% set dark_colors -%}
+--page-paper: #1d1931;
+--page-ink: #f2eef9;
+--page-muted: #bcb4d0;
+--page-rule: #514967;
+--page-accent: #d6c9ff;
+--page-soft: #5b4c85;
+{%- endset %}
+<meta id="theme-scheme" name="color-scheme" content="light dark">
+<script>
+  try {
+    const saved = localStorage.getItem("color-scheme");
+    if (saved === "dark" || saved === "light") {
+      document.getElementById("theme-scheme").content = saved;
+    }
+  } catch {}
+</script>
+<style>
+  :root {
+    color-scheme: light dark;
+    --page-paper: #f6f5fb;
+    --page-ink: #221e38;
+    --page-muted: #59536e;
+    --page-rule: #dcd8e9;
+    --page-accent: #302866;
+    --page-soft: #e6e0ff;
+    background-color: var(--page-paper);
+    color: var(--page-ink);
+  }
+  :root:has(#theme-scheme[content="light"]) {
+    color-scheme: only light;
+  }
+  :root:has(#theme-scheme[content="dark"]) {
+    color-scheme: dark;
+    {{ dark_colors | indent(4) }}
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not(:has(#theme-scheme[content="light"])) {
+      {{ dark_colors | indent(6) }}
+    }
+  }
+</style>

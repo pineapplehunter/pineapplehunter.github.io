@@ -1,6 +1,6 @@
 # pineapplehunter's website
 
-A static personal site for Shogo Takata. The build uses Python, Ninja, the Tailwind v4 standalone CLI, Pillow, and libjxl; the published site needs no JavaScript.
+A static personal site for Shogo Takata. The build uses Python, Ninja, the Tailwind v4 standalone CLI, Pillow, and libjxl; the published site needs no JavaScript except for the optional theme override.
 
 ## Build and preview
 

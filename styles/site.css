@@ -1,10 +1,14 @@
 @import "tailwindcss" source(none);
 
+@theme inline {
+  --color-paper: var(--page-paper);
+  --color-muted: var(--page-muted);
+  --color-rule: var(--page-rule);
+  --color-accent: var(--page-accent);
+  --color-soft: var(--page-soft);
+}
+
 @theme {
-  --color-paper: #f6f5fb;
-  --color-ink: #221e38;
-  --color-muted: #59536e;
-  --color-rule: #dcd8e9;
   --color-indigo-ink: #302866;
   --color-lilac: #e6e0ff;
   --color-gold: #f9df76;
@@ -12,7 +16,7 @@
 }
 
 @layer base {
-  a:focus-visible { @apply outline-2 outline-offset-4 outline-indigo-ink; }
+  a:focus-visible { @apply outline-2 outline-offset-4 outline-accent; }
 }
 
 @utility entry-body {
@@ -24,8 +28,8 @@
   & :where(ul, ol) { @apply pl-6; }
   & :where(ul) { @apply list-disc; }
   & :where(ol) { @apply list-decimal; }
-  & :where(a) { @apply font-medium text-indigo-ink underline underline-offset-4; }
-  & :where(code) { @apply rounded bg-lilac/50 px-1 py-0.5 font-mono text-[0.86em]; }
+  & :where(a) { @apply font-medium text-accent underline underline-offset-4; }
+  & :where(code) { @apply rounded bg-soft/50 px-1 py-0.5 font-mono text-[0.86em]; }
   & :where(pre) { @apply overflow-x-auto rounded-lg bg-indigo-ink p-4 text-white; }
   & :where(pre code) { @apply bg-transparent p-0; }
   & :where(blockquote) { @apply border-s-4 border-rule ps-4 text-muted; }

@@ -1,0 +1,31 @@
+<script>
+  (() => {
+    const button = document.getElementById("theme-toggle");
+    const scheme = document.getElementById("theme-scheme");
+    const system = matchMedia("(prefers-color-scheme: dark)");
+    const systemTheme = () => system.matches ? "dark" : "light";
+    const activeTheme = () => scheme.content === "light dark" ? systemTheme() : scheme.content;
+    const updateButton = () => button.setAttribute("aria-pressed", activeTheme() === "dark");
+
+    button.addEventListener("click", () => {
+      const next = activeTheme() === "dark" ? "light" : "dark";
+      const followsSystem = next === systemTheme();
+      scheme.content = followsSystem ? "light dark" : next;
+      try {
+        if (followsSystem) localStorage.removeItem("color-scheme");
+        else localStorage.setItem("color-scheme", next);
+      } catch {}
+      updateButton();
+    });
+
+    system.addEventListener("change", updateButton);
+    window.addEventListener("storage", (event) => {
+      if (event.key !== "color-scheme" && event.key !== null) return;
+      const saved = event.newValue;
+      scheme.content = saved === "dark" || saved === "light" ? saved : "light dark";
+      updateButton();
+    });
+    updateButton();
+    button.hidden = false;
+  })();
+</script>

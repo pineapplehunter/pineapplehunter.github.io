@@ -8,7 +8,7 @@
     <h1 id="name" class="text-[clamp(2.5rem,7.5vw,4.6rem)] leading-[1.02] font-bold tracking-[-0.06em]">{{ profile.name }}</h1>
     <p class="mt-4 text-base text-lilac sm:text-lg">{{ profile.location }} <span class="mx-1 text-gold" aria-hidden="true">/</span> <span class="font-mono text-[0.92em]">@{{ profile.handle }}</span></p>
     <p class="mt-2 max-w-[38ch] text-base leading-relaxed text-lilac sm:text-lg">{{ profile.affiliation }}</p>
-    <a href="#bio" class="mt-5 inline-flex min-h-11 items-center rounded-md bg-gold px-4 text-sm font-bold text-ink hover:bg-white focus-visible:outline-gold">Read bio</a>
+    <a href="#bio" class="mt-5 inline-flex min-h-11 items-center rounded-md bg-gold px-4 text-sm font-bold text-indigo-ink hover:bg-white focus-visible:outline-gold">Read bio</a>
   </div>
   {{ picture(portrait, "GitHub avatar: a black doodle of a wide-eyed octopus",
             priority="high", picture_class="sm:justify-self-end",
@@ -23,7 +23,7 @@
 <section class="mt-11 sm:mt-15" aria-labelledby="latest">
   <div class="mb-4 flex flex-wrap items-baseline justify-between gap-x-5 gap-y-2">
     <h2 id="latest" class="text-2xl font-bold tracking-tight sm:text-3xl">Latest writing</h2>
-    <a href="{{ root }}" class="text-sm font-semibold text-indigo-ink underline underline-offset-4 hover:decoration-2">All posts</a>
+    <a href="{{ root }}" class="text-sm font-semibold text-accent underline underline-offset-4 hover:decoration-2">All posts</a>
   </div>
   {{ post_list(posts, 3) }}
 </section>
@@ -33,7 +33,7 @@
   <ul class="grid gap-x-8 sm:grid-cols-2">
     {% for project in profile.projects %}
     <li class="border-t border-rule py-4">
-      <a href="{{ project.url }}" class="font-mono text-sm font-semibold text-indigo-ink underline-offset-4 hover:underline">{{ project.name }} <span aria-hidden="true">↗</span></a>
+      <a href="{{ project.url }}" class="font-mono text-sm font-semibold text-accent underline-offset-4 hover:underline">{{ project.name }} <span aria-hidden="true">↗</span></a>
       <p class="mt-1 max-w-[42ch] text-sm leading-relaxed text-muted">{{ project.description }}</p>
     </li>
     {% endfor %}
@@ -42,7 +42,7 @@
 
 <section class="mt-10 max-w-[42rem] border-t border-rule pt-6" aria-labelledby="elsewhere">
   <h2 id="elsewhere" class="text-xl font-bold tracking-tight">Elsewhere</h2>
-  <ul class="mt-2 flex flex-wrap gap-x-6 text-sm font-medium text-indigo-ink">
+  <ul class="mt-2 flex flex-wrap gap-x-6 text-sm font-medium text-accent">
     <li><a class="inline-flex min-h-11 items-center underline underline-offset-4" href="{{ profile.github }}">GitHub</a></li>
     {% for link in profile.elsewhere %}
     <li><a class="inline-flex min-h-11 items-center underline underline-offset-4" href="{{ link.url }}">{{ link.label }}</a></li>
