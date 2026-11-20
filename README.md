@@ -1,6 +1,6 @@
 # pineapplehunter's website
 
-A static personal site for Shogo Takata. The build uses Python, Ninja, the Tailwind v4 standalone CLI, Pillow, and libjxl; the site works without JavaScript, which is used for the theme override and non-blocking stylesheet loading.
+A static personal site for Shogo Takata. The build uses Python, Ninja, the Tailwind v4 standalone CLI, Pillow, and libjxl; the site works without JavaScript, which is used for the optional theme override.
 
 ## Build and preview
 
@@ -57,7 +57,7 @@ The build generates JPEG XL, WebP, and PNG variants up to 240, 480, and 960 pixe
 
 `./build.sh` runs `configure.py`, which uses `ninja.ninja_syntax` to emit `.build/build.ninja`. The script forwards all arguments to `configure.py`. For a project site, run `./build.sh --base-path /my-repo`; the default is `/`. To use Ninja options, run Ninja directly after configuring.
 
-Ninja renders Markdown and Jinja directly to HTML in `dist/` and compiles one minified stylesheet to `dist/assets/site.css`. Tailwind scans the templates, so both languages use the same asset. Pages keep their initial theme colors inline and fetch the shared stylesheet without blocking rendering. If JavaScript is disabled, a regular stylesheet link applies instead.
+Ninja renders Markdown and Jinja directly to HTML in `dist/` and compiles one minified stylesheet to `dist/assets/site.css`. Tailwind scans the templates, so both languages use the same asset. Pages keep their initial theme colors inline and load the shared stylesheet with a normal link in the head, so the first render waits for the styles and avoids a flash of unstyled content.
 
 Edit the Tailwind theme in `styles/site.css`. To add another preprocessor, follow `tools/images.py`: register a Ninja rule and its input/output edges in `configure.py`, then include the generated files in the `site` target. If rendering consumes a generated file, add it to the render edge's inputs.
 

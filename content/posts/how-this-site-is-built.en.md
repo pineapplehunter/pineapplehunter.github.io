@@ -98,12 +98,13 @@ More on that below. The same setup also makes it easy to add live reload with wa
 ## The browser only needs HTML to show the text
 
 After all that talk about CSS and JavaScript, this might sound contradictory.
-The important point is that **the article text is already in the HTML**. You don’t need CSS or JavaScript to read it.
+The important point is that **the article text is already in the HTML**.
+You don’t need CSS or JavaScript to read it.
+CSS and JavaScript are only enhancements.
 
-CSS and JavaScript are enhancements.
-With JavaScript enabled, the browser can start displaying the article without waiting for the shared stylesheet.
-If you’re reading this on a desktop, try selecting the slowest network preset in your browser’s developer tools and reloading.
-You should be able to see the HTML appear before the full styling kicks in.
+When displayed in a browser, it prefers to load the CSS before rendering anything so It will not render with only the information from HTML.
+However, when transitioning to another page, it will use the same CSS file.
+Since same files can be cached, only the HTML contents need to be fetched, hence behaving as though only html is required to render.
 
 ## Actual page size
 
