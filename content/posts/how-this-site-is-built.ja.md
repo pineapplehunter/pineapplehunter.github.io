@@ -30,12 +30,12 @@ HTTP Archive[^archive]によると、2026年11月時点でのデスクトップ�
 
 このサイトの内容は基本的にテキストベースでたまに図が出てくる程度なので、一つ一つのページをできるだけ軽量にしたい。
 
-[^archive]: <https://httparchive.org/reports/page-weight>
-[^paper]: <https://www.techwalla.com/articles/how-many-printed-pages-is-one-megabyte>
-[^mp3]: <https://filesize.org/calculators/audio-file-size/>
-[^bill]: <https://www.computerworld.com/article/1563853/the-640k-quote-won-t-go-away-but-did-gates-really-say-it.html>
-[^howbig]: <https://usefoyer.com/how-big-is/1-megabyte>
-[^filesize]: <https://kordu.tools/blog/file-size-reference-how-big-is-a-megabyte/>
+[^archive]: HTTP Archive "Page Weight" <https://httparchive.org/reports/page-weight>
+[^paper]: Techwalla "How Many Printed Pages Is One Megabyte?"  <https://www.techwalla.com/articles/how-many-printed-pages-is-one-megabyte>
+[^mp3]: filesize.org "Audio File Size Calculator" <https://filesize.org/calculators/audio-file-size/>
+[^bill]: COMPUTERWORLD "The ‘640K’ quote won’t go away — but did Gates really say it?" <https://www.computerworld.com/article/1563853/the-640k-quote-won-t-go-away-but-did-gates-really-say-it.html>
+[^howbig]: usefoyer "How big is 1 Megabyte (MB)? Is It Enough For You?" <https://usefoyer.com/how-big-is/1-megabyte>
+[^filesize]: Kordu Tools "File Size Reference: How Big Is a Megabyte, Really?" <https://kordu.tools/blog/file-size-reference-how-big-is-a-megabyte/>
 
 ## どうすればページは軽量になるのか。
 **ページをHTMLだけで記述すれば良い。**
@@ -49,8 +49,8 @@ HTMLだけを利用する利点も多くあるが[^vanilla][^14k]、軽くデザ
 例えばCSSのライブラリであるTailwindはソースをすべて読み込み必要なCSSだけを出力することができる。
 また、テーマ選択程度であればライブラリは必要ないので直接書き込めば良い。
 
-[^vanilla]: <https://www.vanillahtml.com/blog/html-is-enough>
-[^14k]: <https://jaimebuilds.com/lab/the-14kb-rule/>
+[^vanilla]: VanillaHTML "HTML is enough" <https://www.vanillahtml.com/blog/html-is-enough>
+[^14k]: jaime builds "The 14 KB rule: fitting a portfolio in one TCP roundtrip" <https://jaimebuilds.com/lab/the-14kb-rule/>
 
 ## Markdownのレンダリング
 では書かれたMarkdownをどのようにHTMLに変換するのか。
@@ -76,10 +76,10 @@ ninjaは主にcmakeやmesonなどのC,C++のビルドツールとして使われ
 単純にHTMLのレンダリングをするだけであれば既存の仕組みを使うほうが良いのではないかと思う方もいると思うが、この仕組みを使った面白いことがこのページサイズの計測のために使われているのでもう少し読んでもらいたい。
 また、この仕組みを応用して、watchexec[^watchexec]と組み合わせたLive Reloadも簡単に実現できている。
 
-[^hugo]: <https://gohugo.io/>
-[^vuepress]: <https://vuepress.vuejs.org/>
-[^ninja]: <https://ninja-build.org/>
-[^watchexec]: <https://watchexec.github.io/>
+[^hugo]: HUGO "The world’s fastest framework for building websites" <https://gohugo.io/>
+[^vuepress]: VuePress "Vue-powered Static Site Generator" <https://vuepress.vuejs.org/>
+[^ninja]: Ninja <https://ninja-build.org/>
+[^watchexec]: Watchexec <https://watchexec.github.io/>
 
 ## 表示するためにはHTMLしかいらない
 このページはHTMLのみで表示できる。

@@ -34,12 +34,12 @@ And it only gets worse with ads.
 
 Most of this site is text with an occasional diagram, so I wanted each page to be as lightweight as possible.
 
-[^archive]: <https://httparchive.org/reports/page-weight>
-[^paper]: <https://www.techwalla.com/articles/how-many-printed-pages-is-one-megabyte>
-[^mp3]: <https://filesize.org/calculators/audio-file-size/>
-[^bill]: <https://www.computerworld.com/article/1563853/the-640k-quote-won-t-go-away-but-did-gates-really-say-it.html>
-[^howbig]: <https://usefoyer.com/how-big-is/1-megabyte>
-[^filesize]: <https://kordu.tools/blog/file-size-reference-how-big-is-a-megabyte/>
+[^archive]: HTTP Archive "Page Weight" <https://httparchive.org/reports/page-weight>
+[^paper]: Techwalla "How Many Printed Pages Is One Megabyte?"  <https://www.techwalla.com/articles/how-many-printed-pages-is-one-megabyte>
+[^mp3]: filesize.org "Audio File Size Calculator" <https://filesize.org/calculators/audio-file-size/>
+[^bill]: COMPUTERWORLD "The ‘640K’ quote won’t go away — but did Gates really say it?" <https://www.computerworld.com/article/1563853/the-640k-quote-won-t-go-away-but-did-gates-really-say-it.html>
+[^howbig]: usefoyer "How big is 1 Megabyte (MB)? Is It Enough For You?" <https://usefoyer.com/how-big-is/1-megabyte>
+[^filesize]: Kordu Tools "File Size Reference: How Big Is a Megabyte, Really?" <https://kordu.tools/blog/file-size-reference-how-big-is-a-megabyte/>
 
 ## How do you make a page lightweight?
 
@@ -57,8 +57,8 @@ The idea is to ship only the CSS and JavaScript the page needs.
 Tailwind can scan the source files and generate only the CSS for the utilities the site uses.
 And for something as small as a theme toggle, there’s no need for a library: I can write that code directly.
 
-[^vanilla]: <https://www.vanillahtml.com/blog/html-is-enough>
-[^14k]: <https://jaimebuilds.com/lab/the-14kb-rule/>
+[^vanilla]: VanillaHTML "HTML is enough" <https://www.vanillahtml.com/blog/html-is-enough>
+[^14k]: jaime builds "The 14 KB rule: fitting a portfolio in one TCP roundtrip" <https://jaimebuilds.com/lab/the-14kb-rule/>
 
 ## Rendering Markdown
 
@@ -90,10 +90,10 @@ If all you want to do is render HTML, it’s reasonable to use an existing tool.
 But this setup lets me do something a little more unusual: measure the page as part of its own build.
 More on that below. The same setup also makes it easy to add live reload with watchexec.[^watchexec]
 
-[^hugo]: <https://gohugo.io/>
-[^vuepress]: <https://vuepress.vuejs.org/>
-[^ninja]: <https://ninja-build.org/>
-[^watchexec]: <https://watchexec.github.io/>
+[^hugo]: HUGO "The world’s fastest framework for building websites" <https://gohugo.io/>
+[^vuepress]: VuePress "Vue-powered Static Site Generator" <https://vuepress.vuejs.org/>
+[^ninja]: Ninja <https://ninja-build.org/>
+[^watchexec]: Watchexec <https://watchexec.github.io/>
 
 ## The browser only needs HTML to show the text
 
