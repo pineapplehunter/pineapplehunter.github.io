@@ -52,8 +52,10 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
     ninja.variable("cjxl", ninja_syntax.escape(shlex.quote(cjxl)))
     ninja.variable("site_root", ninja_syntax.escape(shlex.quote(site_root)))
     ninja.variable("live_reload", "1" if args.live_reload else "0")
+    stylesheet = str(dist / "assets/site.css")
+    ninja.variable("stylesheet", stylesheet)
     ninja.rule("render",
-               "$python tools/render.py $mode $out $lang $site_root $alternate $live_reload $in",
+               "$python tools/render.py $mode $out $lang $site_root $alternate $live_reload $stylesheet $in",
                "Render $out")
     # Tailwind leaves the output untouched when the generated CSS is unchanged.
     ninja.rule("tailwind", "$tailwindcss --input $in --output $out --minify --silent",
@@ -72,7 +74,6 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
 
     templates = list(map(str, sorted(Path("templates").glob("*.html"))))
     ninja.build("template-inputs", "phony", templates)
-    stylesheet = str(dist / "assets/site.css")
     ninja.build(stylesheet, "tailwind", "styles/site.css", implicit="template-inputs")
     outputs.append(stylesheet)
     ninja.rule("page_size", "$python tools/page_size.py $in $out $site_root", "Measure $out")
@@ -80,7 +81,7 @@ with (work / "build.ninja").open("w", encoding="utf-8") as file:
 
     ninja.build("render-inputs", "phony",
                 ["template-inputs", "tools/render.py", "content/profile.yaml",
-                 "content/ui.yaml", str(manifest)], order_only=stylesheet)
+                 "content/ui.yaml", str(manifest), stylesheet])
 
     def page(filename, mode, lang, sources=(), alternate=""):
         html = str(dist / filename)

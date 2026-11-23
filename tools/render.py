@@ -1,5 +1,7 @@
 """Render Markdown and Jinja templates into the static site."""
 
+import base64
+import hashlib
 import json
 import re
 import sys
@@ -13,7 +15,7 @@ from markdown_it.token import Token
 from markupsafe import Markup, escape
 from mdit_py_plugins.footnote import footnote_plugin
 
-mode, output, lang, site_root, alternate, live_reload_arg, *sources = sys.argv[1:]
+mode, output, lang, site_root, alternate, live_reload_arg, stylesheet, *sources = sys.argv[1:]
 live_reload = live_reload_arg == "1"
 output = Path(output)
 output_dir = "dist" if output.is_relative_to("dist") else ".build/unmeasured"
@@ -172,7 +174,10 @@ if alternate and mode != "404":
         lang: site_url + filename.as_posix().removesuffix("index.html"),
         other_lang: site_url + alternate_url,
     }
+css_digest = hashlib.sha384(Path(stylesheet).read_bytes()).digest()
+css_integrity = "sha384-" + base64.b64encode(css_digest).decode("ascii")
 context = dict(profile=profile, root=root, home=home, section=mode, lang=lang, ui=ui,
+               css_integrity=css_integrity,
                alternates=alternates, other_lang=other_lang,
                live_reload=live_reload, reload_url=site_root + "__live_reload",
                language_href=root + (alternate_url if alternate else other_home),

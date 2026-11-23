@@ -57,7 +57,7 @@ The build generates JPEG XL, WebP, and PNG variants up to 240, 480, and 960 pixe
 
 `./build.sh` runs `configure.py`, which uses `ninja.ninja_syntax` to emit `.build/build.ninja`. The script forwards all arguments to `configure.py`. For a project site, run `./build.sh --base-path /my-repo`; the default is `/`. To use Ninja options, run Ninja directly after configuring.
 
-Ninja renders Markdown and Jinja directly to HTML in `dist/` and compiles one minified stylesheet to `dist/assets/site.css`. Tailwind scans the templates, so both languages use the same asset. Pages keep their initial theme colors inline and load the shared stylesheet with a normal link in the head, so the first render waits for the styles and avoids a flash of unstyled content.
+Ninja renders Markdown and Jinja directly to HTML in `dist/` and compiles one minified stylesheet to `dist/assets/site.css`. Tailwind scans the templates, so both languages use the same asset. Pages keep their initial theme colors inline and load the shared stylesheet with a normal link in the head, so the first render waits for the styles and avoids a flash of unstyled content. The build embeds a SHA-384 Subresource Integrity hash of the final stylesheet in every page and rerenders the HTML when the compiled CSS changes.
 
 Edit the Tailwind theme in `styles/site.css`. To add another preprocessor, follow `tools/images.py`: register a Ninja rule and its input/output edges in `configure.py`, then include the generated files in the `site` target. If rendering consumes a generated file, add it to the render edge's inputs.
 
